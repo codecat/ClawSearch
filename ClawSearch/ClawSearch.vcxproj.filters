@@ -1,0 +1,718 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk">
+      <UniqueIdentifier>{e26abb2c-05ce-4474-aa6b-0d6f0bc27926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk\capstone">
+      <UniqueIdentifier>{836b0bc9-fdfe-4f45-945f-fd3e597aad9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk\dbghelp">
+      <UniqueIdentifier>{c87c3d42-364d-4fe6-9ab3-8f7e8352af43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk\DeviceNameResolver">
+      <UniqueIdentifier>{17a1513c-2d16-432c-a7ec-8e31e09ebfbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk\jansson">
+      <UniqueIdentifier>{b1cd7fb9-d2e4-448a-bf04-4f11115651f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk\lz4">
+      <UniqueIdentifier>{c50e39c1-5972-409e-a5f3-904860f1a661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk\TitanEngine">
+      <UniqueIdentifier>{831de1fc-1ccd-427d-a848-f62169b3743e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk\XEDParse">
+      <UniqueIdentifier>{ffcdd30c-5e60-4075-95bf-ea1ca7aad310}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk\yara">
+      <UniqueIdentifier>{03176bbe-1752-4b7c-8a63-2decbb9b08a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk\yara\yara">
+      <UniqueIdentifier>{a7e84a7c-b09c-40d8-b685-8ed504db9f41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library Files">
+      <UniqueIdentifier>{83b94fba-0963-43a4-b8bd-12730a208fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library Files\iup">
+      <UniqueIdentifier>{85ea7a07-60e1-4e05-9447-b1d29c07ea08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\iup">
+      <UniqueIdentifier>{08041497-59d7-45cc-812d-2fe0b0851086}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library Files\cd">
+      <UniqueIdentifier>{c4ab402c-b055-4460-b96a-c700ed3b4e76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cd">
+      <UniqueIdentifier>{e37a3db0-b7e1-48cc-a71d-c7b1639633ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scratch">
+      <UniqueIdentifier>{5f5877a3-4e13-4801-8a9c-0a978038cac5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pluginsdk\capstone\arm.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\capstone\arm64.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\capstone\capstone.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\capstone\m68k.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\capstone\mips.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\capstone\platform.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\capstone\ppc.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\capstone\sparc.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\capstone\systemz.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\capstone\x86.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\capstone\xcore.h">
+      <Filter>Header Files\pluginsdk\capstone</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\dbghelp\dbghelp.h">
+      <Filter>Header Files\pluginsdk\dbghelp</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\DeviceNameResolver\DeviceNameResolver.h">
+      <Filter>Header Files\pluginsdk\DeviceNameResolver</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\jansson\jansson.h">
+      <Filter>Header Files\pluginsdk\jansson</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\jansson\jansson_config.h">
+      <Filter>Header Files\pluginsdk\jansson</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\jansson\jansson_x64dbg.h">
+      <Filter>Header Files\pluginsdk\jansson</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\lz4\lz4.h">
+      <Filter>Header Files\pluginsdk\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\lz4\lz4file.h">
+      <Filter>Header Files\pluginsdk\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\lz4\lz4hc.h">
+      <Filter>Header Files\pluginsdk\lz4</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara.h">
+      <Filter>Header Files\pluginsdk\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\ahocorasick.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\arena.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\atoms.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\compiler.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\elf.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\error.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\exec.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\exefiles.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\filemap.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\globals.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\hash.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\hex_lexer.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\integers.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\lexer.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\libyara.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\limits.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\mem.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\modules.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\object.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\parser.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\pe.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\proc.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\re.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\re_lexer.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\rules.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\scan.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\sizedstr.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\stream.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\strutils.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\threading.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\types.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\yara\yara\utils.h">
+      <Filter>Header Files\pluginsdk\yara\yara</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\XEDParse\XEDParse.h">
+      <Filter>Header Files\pluginsdk\XEDParse</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\TitanEngine\TitanEngine.h">
+      <Filter>Header Files\pluginsdk\TitanEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_dbgfunctions.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_plugin_types.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_plugins.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_argument.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_assembler.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_bookmark.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_comment.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_debug.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_flag.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_function.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_gui.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_label.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_memory.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_misc.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_module.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_pattern.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_register.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_stack.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_scriptapi_symbol.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\bridgegraph.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\bridgelist.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\bridgemain.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="plugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginmain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupglcontrols.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupim.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupkey.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iuplua.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iuplua_mglplot.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iuplua_plot.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iuplua_scintilla.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupluacontrols.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupluagl.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupluaglcontrols.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupluaim.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupluamatrixex.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupluaole.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupluatuio.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupluaweb.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupmatrixex.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupole.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iuptuio.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupweb.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iup.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iup_class_cbs.hpp">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iup_config.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iup_mglplot.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iup_plot.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iup_plus.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iup_scintilla.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupcbs.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupcontrols.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupdef.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupdraw.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\iup\include\iupgl.h">
+      <Filter>Header Files\iup</Filter>
+    </ClInclude>
+    <ClInclude Include="csMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cddgn.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cddxf.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdemf.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdgdiplus.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdgl.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdim.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdimage.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdirgb.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdiup.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdlua.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdlua3_private.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdlua5_private.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdluagl.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdluaim.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdluaiup.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdluapdf.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdmf.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdmf_private.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdnative.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdpdf.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdpicture.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdpptx.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdprint.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdps.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdsvg.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdwmf.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\wd.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\wd_old.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cd.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cd_canvas.hpp">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cd_old.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cd_plus.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cd_private.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdcairo.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdcgm.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cdclipbd.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cddbuf.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cd\include\cddebug.h">
+      <Filter>Header Files\cd</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\NetworkStream.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\Scratch.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\StackArray.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\Stream.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\String.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\utf8.h">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\Array.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\Assert.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\Common.h">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\CVectors.h">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\Dictionary.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\Exception.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\Filename.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\FileStream.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\Function.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\MemoryStream.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="Scratch\Mutex.hpp">
+      <Filter>Header Files\Scratch</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="pluginsdk\x32bridge.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\x32dbg.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\x64bridge.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\x64dbg.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\capstone\capstone_x64.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\capstone\capstone_x86.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\DeviceNameResolver\DeviceNameResolver_x64.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\DeviceNameResolver\DeviceNameResolver_x86.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\jansson\jansson_x64.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\jansson\jansson_x86.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\lz4\lz4_x64.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\lz4\lz4_x86.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\TitanEngine\TitanEngine_x64.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\TitanEngine\TitanEngine_x86.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\XEDParse\XEDParse_x64.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\XEDParse\XEDParse_x86.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\yara\yara_x64.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="pluginsdk\yara\yara_x86.lib">
+      <Filter>Library Files</Filter>
+    </Library>
+    <Library Include="..\iup\ftgl_debug.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iup.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iup_plot.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iup_plot_debug.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupcd.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupcontrols.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupgl.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupglcontrols.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupim.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupimglib.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupmatrixex.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupole.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iuptuio.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupweb.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\zlib1.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\freetype6.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\ftgl.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\cd\cdpdf.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\freetype6.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\ftgl.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\ftgl_debug.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\pdflib.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\zlib1.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\cd.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\cdcontextplus.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\cdgl.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\cdim.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="plugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pluginmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="csMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scratch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

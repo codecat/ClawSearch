@@ -30,6 +30,11 @@ public:
 
 	Ihandle* m_hComboValueType;
 
+	Ihandle* m_hFrameScanOptions;
+	Ihandle* m_hCheckFastScan;
+	Ihandle* m_hTextFastScanAlign;
+	Ihandle* m_hCheckPauseWhileScanning;
+
 	Ihandle* m_hListResults;
 
 	MEMMAP m_currentScanMap;
@@ -38,8 +43,8 @@ public:
 
 	s::Array<SearchResult, 100> m_results;
 
-	size_t m_pageSize;
-	unsigned char* m_currentPage;
+	size_t m_scanSize;
+	unsigned char* m_currentBuffer;
 	unsigned char* m_currentCompare;
 
 public:

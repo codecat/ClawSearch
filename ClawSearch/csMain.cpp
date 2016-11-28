@@ -18,6 +18,8 @@ csMain::csMain()
 	m_hCheckHex = nullptr;
 	m_hTextInput = nullptr;
 
+	m_hFrameScanOptions = nullptr;
+
 	m_hListResults = nullptr;
 
 	m_currentScanMap.count = 0;
@@ -25,8 +27,8 @@ csMain::csMain()
 	m_currentScan = 0;
 	m_currentScanValueType = SVT_Unknown;
 
-	m_pageSize = 0x800;
-	m_currentPage = nullptr;
+	m_scanSize = 0x1000;
+	m_currentBuffer = nullptr;
 	m_currentCompare = nullptr;
 }
 
@@ -36,8 +38,8 @@ csMain::~csMain()
 		Close();
 	}
 
-	if (m_currentPage != nullptr) {
-		free(m_currentPage);
+	if (m_currentBuffer != nullptr) {
+		free(m_currentBuffer);
 	}
 
 	if (m_currentScanMap.page != nullptr) {
@@ -61,6 +63,18 @@ void csMain::PerformScan()
 
 	char* inputText = IupGetAttribute(m_hTextInput, "VALUE");
 	bool inputIsHex = !strcmp(IupGetAttribute(m_hCheckHex, "VALUE"), "ON");
+	bool pauseWhileScanning = DbgIsRunning() && !strcmp(IupGetAttribute(m_hCheckPauseWhileScanning, "VALUE"), "ON");
+	bool fastScan = !strcmp(IupGetAttribute(m_hCheckFastScan, "VALUE"), "ON");
+
+	int scanStep = 1;
+	if (fastScan) {
+		sscanf(IupGetAttribute(m_hTextFastScanAlign, "VALUE"), "%d", &scanStep);
+	}
+
+	if (pauseWhileScanning) {
+		DbgCmdExecDirect("pause");
+		_plugin_waituntilpaused();
+	}
 
 	//TODO: Clean this up
 #define HANDLE_SEARCHFOR_SCANF(format, type) type searchFor; \
@@ -103,8 +117,9 @@ void csMain::PerformScan()
 		return;
 	}
 
-	if (m_currentPage == nullptr) {
-		m_currentPage = (unsigned char*)malloc(m_pageSize);
+	if (m_currentBuffer == nullptr) {
+		m_currentBuffer = (unsigned char*)malloc(m_scanSize);
+		memset(m_currentBuffer, 0, m_scanSize);
 	}
 
 	if (m_currentScanMap.page != nullptr) {
@@ -121,30 +136,32 @@ void csMain::PerformScan()
 			ptr_t end = base + size;
 
 			// For each page in the memory region
-			for (ptr_t p = base; p < end; p += m_pageSize) {
-				size_t sz = m_pageSize;
+			for (ptr_t p = base; p < end; p += m_scanSize) {
+				size_t sz = m_scanSize;
 				if (p + sz >= end) {
 					sz = end - p;
 				}
-				DbgMemRead(p, m_currentPage, sz);
 
-				// Perform search
-				for (ptr_t s = 0; s < sz; s++) {
-					if (m_currentPage[s] == find[0]) {
-						if (memcmp(m_currentPage + s + 1, find + 1, findSize - 1) == 0) {
+				//TODO: Try ReadProcessMemory instead
+				DbgMemRead(p, m_currentBuffer, sz);
+
+				// Perform search on buffer
+				for (ptr_t s = 0; s < sz; s += scanStep) {
+					if (m_currentBuffer[s] == find[0]) {
+						if (memcmp(m_currentBuffer + s + 1, find + 1, findSize - 1) == 0) {
 							SearchResult &result = m_results.Add();
 							result.m_base = p;
 							result.m_offset = s;
 
 							result.m_valueFound = 0;
 							if (findSize <= sizeof(uint64_t)) {
-								memcpy(&result.m_valueFound, m_currentPage + s, findSize);
+								memcpy(&result.m_valueFound, m_currentBuffer + s, findSize);
 							}
+
+							s += findSize;
 						}
-					} else {
-						if (s + findSize > m_pageSize) {
-							break;
-						}
+					} else if (s + findSize > m_scanSize) {
+						break;
 					}
 				}
 			}
@@ -162,6 +179,10 @@ void csMain::PerformScan()
 				i--;
 			}
 		}
+	}
+
+	if (pauseWhileScanning) {
+		DbgCmdExec("run");
 	}
 
 	free(find);
@@ -254,8 +275,8 @@ void csMain::Open()
 	CLAW_SETCALLBACK(m_hButtonFirstScan, "ACTION", FirstScan);
 	CLAW_SETCALLBACK(m_hButtonNextScan, "ACTION", NextScan);
 
-	m_hCheckHex = IupToggle("Hex", "ScanHex");
-	m_hTextInput = IupSetAttributes(IupText("ScanText"), "EXPAND=HORIZONTAL");
+	m_hCheckHex = IupToggle("Hex", nullptr);
+	m_hTextInput = IupSetAttributes(IupText(nullptr), "EXPAND=HORIZONTAL");
 	Ihandle* hInput = IupSetAttributes(IupHbox(m_hCheckHex, m_hTextInput, nullptr), "MARGIN=0x0, GAP=5");
 
 	m_hComboValueType = IupList(nullptr);
@@ -267,7 +288,30 @@ void csMain::Open()
 	IupSetAttribute(m_hComboValueType, "VALUE", "3");
 	Ihandle* hValueType = IupSetAttributes(IupHbox(m_hComboValueType, nullptr), "MARGIN=0x0, GAP=5");
 
-	Ihandle* vControls = IupSetAttributes(IupVbox(hButtons, hInput, hValueType, nullptr), "MARGIN=10x0, GAP=5");
+	m_hCheckFastScan = IupToggle("Fast Scan", nullptr);
+	IupSetAttribute(m_hCheckFastScan, "VALUE", "ON");
+
+	m_hTextFastScanAlign = IupText(nullptr);
+	IupSetAttribute(m_hTextFastScanAlign, "VALUE", "4");
+
+	Ihandle* hFastScan = IupSetAttributes(IupHbox(m_hCheckFastScan, m_hTextFastScanAlign, nullptr), "MARGIN=0x0, GAP=5");
+
+	m_hCheckPauseWhileScanning = IupToggle("Pause while scanning", nullptr);
+
+	m_hFrameScanOptions = IupFrame(IupVbox(
+		hFastScan,
+		m_hCheckPauseWhileScanning,
+		nullptr)
+		);
+	IupSetAttribute(m_hFrameScanOptions, "TITLE", "Scan Options");
+	IupSetAttribute(m_hFrameScanOptions, "EXPAND", "HORIZONTAL");
+
+	Ihandle* vControls = IupSetAttributes(IupVbox(
+		hButtons,
+		hInput,
+		hValueType,
+		m_hFrameScanOptions,
+		nullptr), "MARGIN=10x0, GAP=5");
 
 	m_hListResults = IupList(nullptr);
 	IupSetAttribute(m_hListResults, "EXPAND", "YES");

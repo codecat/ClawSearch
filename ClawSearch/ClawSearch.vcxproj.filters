@@ -619,16 +619,7 @@
     <Library Include="pluginsdk\yara\yara_x86.lib">
       <Filter>Library Files</Filter>
     </Library>
-    <Library Include="..\iup\ftgl_debug.lib">
-      <Filter>Library Files\iup</Filter>
-    </Library>
     <Library Include="..\iup\iup.lib">
-      <Filter>Library Files\iup</Filter>
-    </Library>
-    <Library Include="..\iup\iup_plot.lib">
-      <Filter>Library Files\iup</Filter>
-    </Library>
-    <Library Include="..\iup\iup_plot_debug.lib">
       <Filter>Library Files\iup</Filter>
     </Library>
     <Library Include="..\iup\iupcd.lib">
@@ -637,37 +628,16 @@
     <Library Include="..\iup\iupcontrols.lib">
       <Filter>Library Files\iup</Filter>
     </Library>
-    <Library Include="..\iup\iupgl.lib">
-      <Filter>Library Files\iup</Filter>
-    </Library>
-    <Library Include="..\iup\iupglcontrols.lib">
-      <Filter>Library Files\iup</Filter>
-    </Library>
     <Library Include="..\iup\iupim.lib">
       <Filter>Library Files\iup</Filter>
     </Library>
     <Library Include="..\iup\iupimglib.lib">
       <Filter>Library Files\iup</Filter>
     </Library>
-    <Library Include="..\iup\iupmatrixex.lib">
-      <Filter>Library Files\iup</Filter>
-    </Library>
-    <Library Include="..\iup\iupole.lib">
-      <Filter>Library Files\iup</Filter>
-    </Library>
-    <Library Include="..\iup\iuptuio.lib">
-      <Filter>Library Files\iup</Filter>
-    </Library>
-    <Library Include="..\iup\iupweb.lib">
-      <Filter>Library Files\iup</Filter>
-    </Library>
     <Library Include="..\iup\zlib1.lib">
       <Filter>Library Files\iup</Filter>
     </Library>
     <Library Include="..\iup\freetype6.lib">
-      <Filter>Library Files\iup</Filter>
-    </Library>
-    <Library Include="..\iup\ftgl.lib">
       <Filter>Library Files\iup</Filter>
     </Library>
     <Library Include="..\cd\cdpdf.lib">

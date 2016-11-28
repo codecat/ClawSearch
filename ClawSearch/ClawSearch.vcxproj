@@ -351,21 +351,11 @@
     <Library Include="..\cd\pdflib.lib" />
     <Library Include="..\cd\zlib1.lib" />
     <Library Include="..\iup\freetype6.lib" />
-    <Library Include="..\iup\ftgl.lib" />
-    <Library Include="..\iup\ftgl_debug.lib" />
     <Library Include="..\iup\iup.lib" />
     <Library Include="..\iup\iupcd.lib" />
     <Library Include="..\iup\iupcontrols.lib" />
-    <Library Include="..\iup\iupgl.lib" />
-    <Library Include="..\iup\iupglcontrols.lib" />
     <Library Include="..\iup\iupim.lib" />
     <Library Include="..\iup\iupimglib.lib" />
-    <Library Include="..\iup\iupmatrixex.lib" />
-    <Library Include="..\iup\iupole.lib" />
-    <Library Include="..\iup\iuptuio.lib" />
-    <Library Include="..\iup\iupweb.lib" />
-    <Library Include="..\iup\iup_plot.lib" />
-    <Library Include="..\iup\iup_plot_debug.lib" />
     <Library Include="..\iup\zlib1.lib" />
     <Library Include="pluginsdk\capstone\capstone_x64.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

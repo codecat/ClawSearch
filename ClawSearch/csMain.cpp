@@ -60,23 +60,40 @@ void csMain::PerformScan()
 	unsigned char* find = nullptr;
 
 	char* inputText = IupGetAttribute(m_hTextInput, "VALUE");
+	bool inputIsHex = !strcmp(IupGetAttribute(m_hCheckHex, "VALUE"), "ON");
 
-#define HANDLE_SEARCHFOR() findSize = sizeof(searchFor); \
-	find = (unsigned char*)malloc(findSize); \
-	memcpy(find, &searchFor, findSize);
+	//TODO: Clean this up
+#define HANDLE_SEARCHFOR_SCANF(format, type) type searchFor; \
+	if (sscanf(inputText, format, &searchFor) > 0) { \
+		findSize = sizeof(searchFor); \
+		find = (unsigned char*)malloc(findSize); \
+		memcpy(find, &searchFor, findSize); \
+	}
 
 	if (m_currentScanValueType == SVT_Char) {
-		int8_t searchFor;
-		if (sscanf(inputText, "%hhd", &searchFor) == 1) { HANDLE_SEARCHFOR(); }
+		if (inputIsHex) {
+			HANDLE_SEARCHFOR_SCANF("%hhx", uint8_t);
+		} else {
+			HANDLE_SEARCHFOR_SCANF("%hhd", int8_t);
+		}
 	} else if (m_currentScanValueType == SVT_Int16) {
-		int16_t searchFor;
-		if (sscanf(inputText, "%hd", &searchFor) == 1) { HANDLE_SEARCHFOR(); }
+		if (inputIsHex) {
+			HANDLE_SEARCHFOR_SCANF("%hx", uint16_t);
+		} else {
+			HANDLE_SEARCHFOR_SCANF("%hd", int16_t);
+		}
 	} else if (m_currentScanValueType == SVT_Int32) {
-		int32_t searchFor;
-		if (sscanf(inputText, "%ld", &searchFor) == 1) { HANDLE_SEARCHFOR(); }
+		if (inputIsHex) {
+			HANDLE_SEARCHFOR_SCANF("%x", uint32_t);
+		} else {
+			HANDLE_SEARCHFOR_SCANF("%d", int32_t);
+		}
 	} else if (m_currentScanValueType == SVT_Int64) {
-		int64_t searchFor;
-		if (sscanf(inputText, "%lld", &searchFor) == 1) { HANDLE_SEARCHFOR(); }
+		if (inputIsHex) {
+			HANDLE_SEARCHFOR_SCANF("%llx", uint64_t);
+		} else {
+			HANDLE_SEARCHFOR_SCANF("%llx", int64_t);
+		}
 	}
 
 #undef HANDLE_SEARCHFOR

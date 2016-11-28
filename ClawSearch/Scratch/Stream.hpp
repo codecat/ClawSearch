@@ -47,15 +47,15 @@ public:
 	Stream();
 	~Stream();
 
-	virtual uint32_t Size() = 0;
-	virtual uint32_t Location() = 0;
+	virtual size_t Size() = 0;
+	virtual size_t Location() = 0;
 	virtual void Seek(int32_t iPos, int32_t iOrigin) = 0;
 	virtual bool AtEOF() = 0;
 
 	virtual void Flush();
 	virtual void Close();
 
-	virtual void Write(const void* p, uint32_t iLen) = 0;
+	virtual void Write(const void* p, size_t iLen) = 0;
 	inline void WriteIndex(const int32_t &i) { Write(&i, sizeof(int32_t)); }
 	inline void WriteLong(const int64_t &l)	{ Write(&l, sizeof(int64_t)); }
 	inline void WriteFloat(const float &f)	 { Write(&f, sizeof(float)); }
@@ -63,7 +63,7 @@ public:
 	void WriteString(const String &str);
 	void WriteStream(Stream &strm);
 
-	virtual int Read(void* pDest, uint32_t iLen) = 0;
+	virtual size_t Read(void* pDest, size_t iLen) = 0;
 	void ReadToEnd(void* pDest);
 	inline int32_t ReadIndex()	{ int32_t i = 0; Read(&i, sizeof(int32_t)); return i; }
 	inline int64_t ReadLong()	 { int64_t l = 0; Read(&l, sizeof(int64_t)); return l; }
@@ -122,11 +122,11 @@ void Stream::WriteString(const String &str)
 void Stream::WriteStream(Stream &strm)
 {
 	// get buffer size
-	uint32_t ulBufferSize = strm.Size() - strm.Location();
-	uint32_t ulBytesLeft = ulBufferSize;
+	size_t ulBufferSize = strm.Size() - strm.Location();
+	size_t ulBytesLeft = ulBufferSize;
 
 	// allocate memory for chunks
-	uint32_t ulChunkSize = 1024;
+	size_t ulChunkSize = 1024;
 	void* pBuffer = malloc(ulChunkSize);
 
 	// loop through chunks required to write
@@ -171,7 +171,7 @@ String Stream::ReadString()
 
 bool Stream::Expect(const String &str)
 {
-	int iLen = strlen(str);
+	int iLen = (int)strlen(str);
 
 	char* szBuffer = new char[iLen + 1];
 	szBuffer[iLen] = '\0';

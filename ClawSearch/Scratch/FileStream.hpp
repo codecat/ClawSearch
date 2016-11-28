@@ -42,8 +42,8 @@ public:
 	FileStream();
 	~FileStream();
 
-	uint32_t Size();
-	uint32_t Location();
+	size_t Size();
+	size_t Location();
 	void Seek(int32_t iPos, int32_t iOrigin);
 	bool AtEOF();
 
@@ -56,8 +56,8 @@ public:
 	void Flush();
 
 	void Close();
-	void Write(const void* p, uint32_t iLen);
-	int Read(void* pDest, uint32_t iLen);
+	void Write(const void* p, size_t iLen);
+	size_t Read(void* pDest, size_t iLen);
 	const void ReadToEnd(void* pDest);
 };
 
@@ -77,16 +77,16 @@ FileStream::~FileStream()
 	Close();
 }
 
-uint32_t FileStream::Size()
+size_t FileStream::Size()
 {
-	uint32_t ulPos = Location();
+	size_t ulPos = Location();
 	Seek(0, SEEK_END);
-	uint32_t ulSize = Location();
-	Seek(ulPos, SEEK_SET);
+	size_t ulSize = Location();
+	Seek((int32_t)ulPos, SEEK_SET);
 	return ulSize;
 }
 
-uint32_t FileStream::Location()
+size_t FileStream::Location()
 {
 	return ftell(fs_pfh);
 }
@@ -186,12 +186,12 @@ void FileStream::Close()
 	}
 }
 
-void FileStream::Write(const void* p, uint32_t iLen)
+void FileStream::Write(const void* p, size_t iLen)
 {
 	fwrite(p, 1, iLen, fs_pfh);
 }
 
-int FileStream::Read(void* pDest, uint32_t iLen)
+size_t FileStream::Read(void* pDest, size_t iLen)
 {
 	return fread(pDest, 1, iLen, fs_pfh);
 }

@@ -640,34 +640,43 @@
     <Library Include="..\iup\freetype6.lib">
       <Filter>Library Files\iup</Filter>
     </Library>
-    <Library Include="..\cd\cdpdf.lib">
-      <Filter>Library Files\cd</Filter>
-    </Library>
-    <Library Include="..\cd\freetype6.lib">
-      <Filter>Library Files\cd</Filter>
-    </Library>
-    <Library Include="..\cd\ftgl.lib">
-      <Filter>Library Files\cd</Filter>
-    </Library>
-    <Library Include="..\cd\ftgl_debug.lib">
-      <Filter>Library Files\cd</Filter>
-    </Library>
-    <Library Include="..\cd\pdflib.lib">
-      <Filter>Library Files\cd</Filter>
-    </Library>
-    <Library Include="..\cd\zlib1.lib">
-      <Filter>Library Files\cd</Filter>
-    </Library>
     <Library Include="..\cd\cd.lib">
       <Filter>Library Files\cd</Filter>
     </Library>
     <Library Include="..\cd\cdcontextplus.lib">
       <Filter>Library Files\cd</Filter>
     </Library>
-    <Library Include="..\cd\cdgl.lib">
+    <Library Include="..\cd\cdim.lib">
       <Filter>Library Files\cd</Filter>
     </Library>
-    <Library Include="..\cd\cdim.lib">
+    <Library Include="..\iup\iupimglib_x64.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\zlib1_x64.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\freetype6_x64.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iup_x64.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupcd_x64.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupcontrols_x64.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\iup\iupim_x64.lib">
+      <Filter>Library Files\iup</Filter>
+    </Library>
+    <Library Include="..\cd\cd_x64.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\cdcontextplus_x64.lib">
+      <Filter>Library Files\cd</Filter>
+    </Library>
+    <Library Include="..\cd\cdim_x64.lib">
       <Filter>Library Files\cd</Filter>
     </Library>
   </ItemGroup>

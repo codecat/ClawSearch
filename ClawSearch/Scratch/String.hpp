@@ -63,7 +63,7 @@ protected:
 
 	void CopyToBuffer(const char* szSrc);
 	void AppendToBuffer(const char* szSrc);
-	void AppendToBuffer(const char* szSrc, int iCountBytes);
+	void AppendToBuffer(const char* szSrc, size_t iCountBytes);
 	void AppendToBuffer(const s_char cSrc);
 
 public:
@@ -164,9 +164,9 @@ void String::CopyToBuffer(const char* szSrc)
 	}
 
 #ifdef SCRATCH_NO_UTF8
-	int iLen = strlen(szSrc);
+	size_t iLen = strlen(szSrc);
 #else
-	int iLen = utf8size(szSrc) - 1;
+	size_t iLen = utf8size(szSrc) - 1;
 #endif
 	if (iLen == 0) {
 		// Clean up
@@ -181,11 +181,11 @@ void String::CopyToBuffer(const char* szSrc)
 
 	// Find the current size and the required size for the string.
 #ifdef SCRATCH_NO_UTF8
-	int iBufLen = strlen(this->str_szBuffer) + 1;
+	size_t iBufLen = strlen(this->str_szBuffer) + 1;
 #else
-	int iBufLen = utf8size(this->str_szBuffer);
+	size_t iBufLen = utf8size(this->str_szBuffer);
 #endif
-	int iReqLen = iLen + 1;
+	size_t iReqLen = iLen + 1;
 
 	// Check if we need to make more room.
 	if (iReqLen > iBufLen) {
@@ -206,14 +206,14 @@ void String::CopyToBuffer(const char* szSrc)
 void String::AppendToBuffer(const char* szSrc)
 {
 #ifdef SCRATCH_NO_UTF8
-	int len = strlen(szSrc);
+	size_t len = strlen(szSrc);
 #else
-	int len = utf8size(szSrc) - 1;
+	size_t len = utf8size(szSrc) - 1;
 #endif
 	this->AppendToBuffer(szSrc, len);
 }
 
-void String::AppendToBuffer(const char* szSrc, int iCountBytes)
+void String::AppendToBuffer(const char* szSrc, size_t iCountBytes)
 {
 	// Validate source string
 	if (szSrc == nullptr) {
@@ -229,9 +229,9 @@ void String::AppendToBuffer(const char* szSrc, int iCountBytes)
 
 	// Find the current size and the required size for the string.
 #ifdef SCRATCH_NO_UTF8
-	int iBufBytes = strlen(this->str_szBuffer);
+	size_t iBufBytes = strlen(this->str_szBuffer);
 #else
-	int iBufBytes = utf8size(this->str_szBuffer) - 1;
+	size_t iBufBytes = utf8size(this->str_szBuffer) - 1;
 #endif
 
 	// Get ourselves a new buffer
@@ -240,11 +240,11 @@ void String::AppendToBuffer(const char* szSrc, int iCountBytes)
 	// Copy the buffers
 	int iOffset = 0;
 
-	for (int i = 0; i < iBufBytes; i++) {
+	for (size_t i = 0; i < iBufBytes; i++) {
 		this->str_szBuffer[iOffset++] = szOldBuffer[i];
 	}
 
-	for (int i = 0; i < iCountBytes; i++) {
+	for (size_t i = 0; i < iCountBytes; i++) {
 		this->str_szBuffer[iOffset++] = szSrc[i];
 	}
 
@@ -269,23 +269,23 @@ void String::AppendToBuffer(const s_char cSrc)
 
 	// Find the current size and the required size for the string.
 #ifdef SCRATCH_NO_UTF8
-	int iBufBytes = strlen(this->str_szBuffer);
+	size_t iBufBytes = strlen(this->str_szBuffer);
 #else
-	int iBufBytes = utf8size(this->str_szBuffer) - 1;
+	size_t iBufBytes = utf8size(this->str_szBuffer) - 1;
 #endif
 
 	// Get ourselves a new buffer
 #ifdef SCRATCH_NO_UTF8
 	this->str_szBuffer = new char[iBufBytes + 2];
 #else
-	int charSize = utf8codepointsize(cSrc);
+	size_t charSize = utf8codepointsize(cSrc);
 	this->str_szBuffer = new char[iBufBytes + charSize + 1];
 #endif
 
 	// Copy the buffer
-	int iOffset = 0;
+	size_t iOffset = 0;
 
-	for (int i = 0; i < iBufBytes; i++) {
+	for (size_t i = 0; i < iBufBytes; i++) {
 		this->str_szBuffer[iOffset++] = szOldBuffer[i];
 	}
 
@@ -352,9 +352,9 @@ int String::Length() const
 	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
-	return strlen(this->str_szBuffer);
+	return (int)strlen(this->str_szBuffer);
 #else
-	return utf8len(this->str_szBuffer);
+	return (int)utf8len(this->str_szBuffer);
 #endif
 }
 
@@ -363,9 +363,9 @@ int String::Size() const
 	MUTEX_LOCK(str_mutex);
 
 #ifdef SCRATCH_NO_UTF8
-	return strlen(this->str_szBuffer);
+	return (int)strlen(this->str_szBuffer);
 #else
-	return utf8size(this->str_szBuffer) - 1;
+	return (int)utf8size(this->str_szBuffer) - 1;
 #endif
 }
 
@@ -451,13 +451,13 @@ void String::Split(const String &strNeedle, StackArray<String> &astrResult, bool
 		// If the needle is found
 		if (szOffset != nullptr) {
 			// Get the length for the string
-			int iLen = szOffset - szOffsetPrev;
+			size_t iLen = szOffset - szOffsetPrev;
 
 			// And get a buffer started
 			char* szPart = new char[iLen + 1];
 
 			// Copy over the characters to the part buffer
-			int i = 0;
+			size_t i = 0;
 			for (; i < iLen; i++) {
 				szPart[i] = *(szOffset - (iLen - i));
 			}
@@ -482,16 +482,16 @@ void String::Split(const String &strNeedle, StackArray<String> &astrResult, bool
 		} else {
 			// Get the length for the string
 #ifdef SCRATCH_NO_UTF8
-			int iLen = strlen(szOffsetPrev);
+			size_t iLen = strlen(szOffsetPrev);
 #else
-			int iLen = utf8size(szOffsetPrev) - 1;
+			size_t iLen = utf8size(szOffsetPrev) - 1;
 #endif
 
 			// And get a buffer started
 			char* szPart = new char[iLen + 1];
 
 			// Copy over the characters to the part buffer
-			int i = 0;
+			size_t i = 0;
 			for (; i < iLen; i++) {
 				szPart[i] = szOffsetPrev[i];
 			}
@@ -572,9 +572,9 @@ String String::InternalTrim(bool bLeft, bool bRight, s_char c) const
 {
 	// Copy ourselves into a new buffer
 #ifdef SCRATCH_NO_UTF8
-	int bytes = strlen(this->str_szBuffer);
+	size_t bytes = strlen(this->str_szBuffer);
 #else
-	int bytes = utf8size(this->str_szBuffer) - 1;
+	size_t bytes = utf8size(this->str_szBuffer) - 1;
 #endif
 	char* szBuffer = new char[bytes + 1];
 
@@ -720,9 +720,9 @@ String String::Replace(const String &strNeedle, const String &strReplace) const
 		} else {
 			// Append the remaining part of the source string
 #ifdef SCRATCH_NO_UTF8
-			int bytes = strlen(szOffsetPrev);
+			size_t bytes = strlen(szOffsetPrev);
 #else
-			int bytes = utf8size(szOffsetPrev) - 1;
+			size_t bytes = utf8size(szOffsetPrev) - 1;
 #endif
 			strRet.AppendToBuffer(szOffsetPrev, bytes);
 		}
@@ -1017,7 +1017,7 @@ void String::Fill(s_char c, int ct)
 	size_t charSize = utf8codepointsize(c);
 	char* szChar = new char[charSize];
 	utf8catcodepoint(szChar, c, charSize);
-	int size = ct * charSize;
+	size_t size = ct * charSize;
 	char* szBuffer = new char[size + 1];
 	for (int i = 0; i < ct; i++) {
 		memcpy(szBuffer + i * charSize, szChar, charSize);

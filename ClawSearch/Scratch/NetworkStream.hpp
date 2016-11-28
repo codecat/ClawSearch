@@ -62,15 +62,15 @@ public:
 	NetworkStream();
 	~NetworkStream();
 
-	uint32_t Size();
-	uint32_t Location();
+	size_t Size();
+	size_t Location();
 	void Seek(int32_t iPos, int32_t iOrigin);
 	bool AtEOF();
 
 	bool Connect(const char* szAddress, uint16_t iPort);
 	void Close();
 	void Write(const void* p, uint32_t iLen);
-	int Read(void* pDest, uint32_t iLen);
+	size_t Read(void* pDest, size_t iLen);
 
 	bool IsConnected();
 
@@ -119,7 +119,7 @@ NetworkStream::~NetworkStream()
 	delete ns_psin;
 }
 
-uint32_t NetworkStream::Size()
+size_t NetworkStream::Size()
 {
 #ifdef SCRATCH_NO_EXCEPTIONS
 	return 0;
@@ -128,7 +128,7 @@ uint32_t NetworkStream::Size()
 #endif
 }
 
-uint32_t NetworkStream::Location()
+size_t NetworkStream::Location()
 {
 #ifdef SCRATCH_NO_EXCEPTIONS
 	return 0;
@@ -183,7 +183,7 @@ void NetworkStream::Write(const void* p, uint32_t iLen)
 	send(ns_socket, (const char*)p, iLen, 0);
 }
 
-int NetworkStream::Read(void* pDest, uint32_t iLen)
+size_t NetworkStream::Read(void* pDest, size_t iLen)
 {
 	int iRet = recv(ns_socket, (char*)pDest, iLen, 0);
 	ns_bEOF = (iRet <= 0) || ((uint32_t)iRet < iLen);

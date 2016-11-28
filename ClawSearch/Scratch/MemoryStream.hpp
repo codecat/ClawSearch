@@ -35,25 +35,25 @@ class MemoryStream : public Stream
 {
 public:
 	uint8_t* strm_pubBuffer;
-	uint32_t strm_ulPosition;
-	uint32_t strm_ulSize;
-	uint32_t strm_ulUsed;
+	size_t strm_ulPosition;
+	size_t strm_ulSize;
+	size_t strm_ulUsed;
 
 public:
 	MemoryStream();
 	MemoryStream(const MemoryStream &copy);
 	~MemoryStream();
 
-	uint32_t Size();
-	uint32_t Location();
+	size_t Size();
+	size_t Location();
 	void Seek(int32_t iPos, int32_t iOrigin);
 	bool AtEOF();
 
-	void Write(const void* p, uint32_t iLen);
-	int Read(void* pDest, uint32_t iLen);
+	void Write(const void* p, size_t iLen);
+	size_t Read(void* pDest, size_t iLen);
 
 private:
-	void AllocateMoreMemory(uint32_t ctBytes);
+	void AllocateMoreMemory(size_t ctBytes);
 };
 
 #ifdef SCRATCH_IMPL
@@ -84,12 +84,12 @@ MemoryStream::~MemoryStream()
 	delete[] strm_pubBuffer;
 }
 
-uint32_t MemoryStream::Size()
+size_t MemoryStream::Size()
 {
 	return strm_ulUsed;
 }
 
-uint32_t MemoryStream::Location()
+size_t MemoryStream::Location()
 {
 	return strm_ulPosition;
 }
@@ -108,11 +108,11 @@ bool MemoryStream::AtEOF()
 	return Location() >= Size();
 }
 
-void MemoryStream::Write(const void* p, uint32_t iLen)
+void MemoryStream::Write(const void* p, size_t iLen)
 {
 	// check if we need a larger buffer
 	if (strm_ulPosition + iLen >= strm_ulSize) {
-		AllocateMoreMemory(Max<uint32_t>(iLen, 1024));
+		AllocateMoreMemory(Max<size_t>(iLen, 1024));
 	}
 
 	// copy over memory
@@ -122,12 +122,12 @@ void MemoryStream::Write(const void* p, uint32_t iLen)
 	strm_ulPosition += iLen;
 
 	// update used counter
-	strm_ulUsed = Max<uint32_t>(strm_ulPosition, strm_ulUsed);
+	strm_ulUsed = Max<size_t>(strm_ulPosition, strm_ulUsed);
 }
 
-int MemoryStream::Read(void* pDest, uint32_t iLen)
+size_t MemoryStream::Read(void* pDest, size_t iLen)
 {
-	uint32_t ulStart = strm_ulPosition;
+	size_t ulStart = strm_ulPosition;
 
 	// increase position
 	strm_ulPosition += iLen;
@@ -137,7 +137,7 @@ int MemoryStream::Read(void* pDest, uint32_t iLen)
 		strm_ulPosition = Size();
 	}
 
-	uint32_t ulRealLength = strm_ulPosition - ulStart;
+	size_t ulRealLength = strm_ulPosition - ulStart;
 
 	// copy data to destination
 	memcpy(pDest, strm_pubBuffer + ulStart, ulRealLength);
@@ -145,7 +145,7 @@ int MemoryStream::Read(void* pDest, uint32_t iLen)
 	return ulRealLength;
 }
 
-void MemoryStream::AllocateMoreMemory(uint32_t ctBytes)
+void MemoryStream::AllocateMoreMemory(size_t ctBytes)
 {
 	ASSERT(ctBytes > 0);
 

@@ -190,21 +190,33 @@ void csMain::PerformScan()
 	m_currentCompare = nullptr;
 
 	IupSetAttribute(m_hListResults, "REMOVEITEM", "ALL");
-	for (int i = 0; i < m_results.Count(); i++) {
+	IupSetAttribute(m_hListResults, "AUTOREDRAW", "NO");
+	int numResults = m_results.Count();
+	for (int i = 0; i < numResults; i++) {
 		SearchResult &result = m_results[i];
 
 		ptr_t pointer = result.m_base + result.m_offset;
 
-		s::String strLine;
-		char label[MAX_LABEL_SIZE];
-		if (DbgGetLabelAt(pointer, SEG_DEFAULT, label)) {
-			strLine = s::strPrintF("%p %s", pointer, label);
-		} else {
-			strLine = s::strPrintF("%p", pointer);
+		s::String strLine = s::strPrintF("%p", pointer);
+
+		//TODO: Can we up the performance on this?
+		if (numResults < 20) {
+			char moduleName[MAX_MODULE_SIZE];
+			if (DbgGetModuleAt(pointer, moduleName)) {
+				strLine += s::strPrintF(" (%s)", moduleName);
+			}
+
+			char label[MAX_LABEL_SIZE];
+			if (DbgGetLabelAt(pointer, SEG_DEFAULT, label)) {
+				strLine += s::strPrintF(" %s", label);
+			}
 		}
 
 		IupSetAttribute(m_hListResults, "APPENDITEM", strLine);
 	}
+
+	IupSetAttribute(m_hListResults, "AUTOREDRAW", "YES");
+	IupRedraw(m_hListResults, 1);
 
 	IupSetAttribute(m_hButtonFirstScan, "ACTIVE", "YES");
 	IupSetAttribute(m_hButtonNextScan, "ACTIVE", "YES");
@@ -314,6 +326,7 @@ void csMain::Open()
 		nullptr), "MARGIN=10x0, GAP=5");
 
 	m_hListResults = IupList(nullptr);
+	IupSetAttribute(m_hListResults, "FONT", "Consolas, 9");
 	IupSetAttribute(m_hListResults, "EXPAND", "YES");
 	IupSetAttribute(m_hListResults, "1", nullptr);
 	IupSetCallback(m_hListResults, "ACTION", (Icallback)_claw_ResultClicked);

@@ -5,6 +5,7 @@
 CLAW_CALLBACK(SearchWindowClosing);
 CLAW_CALLBACK(FirstScan);
 CLAW_CALLBACK(NextScan);
+CLAW_CALLBACK(ScanValueTypeChanged);
 
 int _claw_ResultClicked(Ihandle* handle, char* text, int item, int state) { _csMain->ResultClicked(text, item, state); return 0; }
 
@@ -19,6 +20,10 @@ csMain::csMain()
 	m_hTextInput = nullptr;
 
 	m_hFrameScanOptions = nullptr;
+	m_hFloatMethod = nullptr;
+	m_hCheckFastScan = nullptr;
+	m_hTextFastScanAlign = nullptr;
+	m_hCheckPauseWhileScanning = nullptr;
 
 	m_hListResults = nullptr;
 
@@ -47,6 +52,23 @@ csMain::~csMain()
 	}
 }
 
+SearchValueMethod csMain::MethodForType(SearchValueType type)
+{
+	switch (type) {
+	case SVT_Char:
+	case SVT_Int16:
+	case SVT_Int32:
+	case SVT_Int64:
+		return SVM_Integer;
+
+	case SVT_Float:
+	case SVT_Double:
+		return SVM_Float;
+	}
+
+	return SVM_Unknown;
+}
+
 int csMain::SearchWindowClosing()
 {
 	m_hDialog = nullptr;
@@ -65,6 +87,7 @@ void csMain::PerformScan()
 	bool inputIsHex = !strcmp(IupGetAttribute(m_hCheckHex, "VALUE"), "ON");
 	bool pauseWhileScanning = DbgIsRunning() && !strcmp(IupGetAttribute(m_hCheckPauseWhileScanning, "VALUE"), "ON");
 	bool fastScan = !strcmp(IupGetAttribute(m_hCheckFastScan, "VALUE"), "ON");
+	bool floatTruncate = !strcmp(IupGetAttribute(m_hFloatMethod, "VALUE"), "trunc");
 
 	int scanStep = 1;
 	if (fastScan) {
@@ -75,6 +98,8 @@ void csMain::PerformScan()
 		DbgCmdExecDirect("pause");
 		_plugin_waituntilpaused();
 	}
+
+	SearchValueMethod svm = MethodForType(m_currentScanValueType);
 
 	//TODO: Clean this up
 #define HANDLE_SEARCHFOR_SCANF(format, type) type searchFor; \
@@ -107,6 +132,16 @@ void csMain::PerformScan()
 			HANDLE_SEARCHFOR_SCANF("%llx", uint64_t);
 		} else {
 			HANDLE_SEARCHFOR_SCANF("%llx", int64_t);
+		}
+	} else if (m_currentScanValueType == SVT_Float) {
+		HANDLE_SEARCHFOR_SCANF("%f", float);
+		if (floatTruncate) {
+			*(float*)find = trunc(*(float*)find);
+		}
+	} else if (m_currentScanValueType == SVT_Double) {
+		HANDLE_SEARCHFOR_SCANF("%lf", double);
+		if (floatTruncate) {
+			*(double*)find = trunc(*(double*)find);
 		}
 	}
 
@@ -147,22 +182,70 @@ void csMain::PerformScan()
 
 				// Perform search on buffer
 				for (ptr_t s = 0; s < sz; s += scanStep) {
-					if (m_currentBuffer[s] == find[0]) {
-						if (memcmp(m_currentBuffer + s + 1, find + 1, findSize - 1) == 0) {
-							SearchResult &result = m_results.Add();
-							result.m_base = p;
-							result.m_offset = s;
+					if (svm == SVM_Integer) {
+						// For basic integer types
+						
+						// Stop if find size is beyond scan size
+						if (s + findSize > m_scanSize) {
+							break;
+						}
 
-							result.m_valueFound = 0;
-							if (findSize <= sizeof(uint64_t)) {
-								memcpy(&result.m_valueFound, m_currentBuffer + s, findSize);
+						// Go to next if the bytes don't match
+						if (memcmp(m_currentBuffer + s, find, findSize) != 0) {
+							continue;
+						}
+
+					} else if (svm == SVM_Float) {
+						// For floating point types
+
+						// Stop is find size is beyond scan size
+						if (s + findSize > m_scanSize) {
+							continue;
+						}
+
+						// Depending on which type of float
+						if (m_currentScanValueType == SVT_Float) {
+							float &f = *(float*)(m_currentBuffer + s);
+
+							// If our source float is truncated
+							if (floatTruncate) {
+								f = trunc(f);
 							}
 
-							s += findSize;
+							// Go to next if the float does not compare
+							if (!cmpfloat(f, *(float*)find)) {
+								continue;
+							}
+						} else if (m_currentScanValueType == SVT_Double) {
+							double &d = *(double*)(m_currentBuffer + s);
+
+							// If our source double is truncated
+							if (floatTruncate) {
+								d = truncl(d);
+							}
+
+							// Go to next if the double does not compare
+							if (!cmpdouble(d, *(double*)find)) {
+								continue;
+							}
+						} else {
+							assert(false);
+							continue;
 						}
-					} else if (s + findSize > m_scanSize) {
-						break;
+					} else {
+						assert(false);
+						continue;
 					}
+
+					// Found it!
+					SearchResult &result = m_results.Add();
+					result.m_base = p;
+					result.m_offset = s;
+					if (findSize <= sizeof(uint64_t)) {
+						memcpy(&result.m_valueFound, m_currentBuffer + s, findSize);
+					}
+
+					s += findSize;
 				}
 			}
 		}
@@ -173,7 +256,11 @@ void csMain::PerformScan()
 	if (m_currentScan > 1) {
 		for (int i = 0; i < m_results.Count(); i++) {
 			SearchResult &result = m_results[i];
+
+			// This is really slow!
 			DbgMemRead(result.m_base + result.m_offset, m_currentCompare, findSize);
+
+			//TODO: Generic type support here instead of only integers
 			if (memcmp(m_currentCompare, find, findSize) != 0) {
 				m_results.RemoveAt(i);
 				i--;
@@ -238,7 +325,6 @@ int csMain::FirstScan()
 	}
 
 	m_currentScan = 1;
-	m_currentScanValueType = (SearchValueType)IupGetInt(m_hComboValueType, "VALUE");
 
 	IupSetAttribute(m_hButtonFirstScan, "TITLE", "New Scan");
 
@@ -272,6 +358,17 @@ void csMain::ResultClicked(char* text, int item, int state)
 	GuiDumpAt(result.m_base + result.m_offset);
 }
 
+int csMain::ScanValueTypeChanged()
+{
+	m_currentScanValueType = (SearchValueType)IupGetInt(m_hComboValueType, "VALUE");
+
+	SearchValueMethod svm = MethodForType(m_currentScanValueType);
+	IupSetAttribute(m_hCheckHex, "ACTIVE", svm == SVM_Integer ? "YES" : "NO");
+	IupSetAttribute(m_hFloatMethod, "ACTIVE", svm == SVM_Float ? "YES" : "NO");
+
+	return 0;
+}
+
 void csMain::Open()
 {
 	if (m_hDialog != nullptr) {
@@ -297,8 +394,11 @@ void csMain::Open()
 	IupSetAttribute(m_hComboValueType, "2", "2 Bytes");
 	IupSetAttribute(m_hComboValueType, "3", "4 Bytes");
 	IupSetAttribute(m_hComboValueType, "4", "8 Bytes");
+	IupSetAttribute(m_hComboValueType, "5", "Float");
+	IupSetAttribute(m_hComboValueType, "6", "Double");
 	IupSetAttribute(m_hComboValueType, "VALUE", "3");
 	Ihandle* hValueType = IupSetAttributes(IupHbox(m_hComboValueType, nullptr), "MARGIN=0x0, GAP=5");
+	CLAW_SETCALLBACK(m_hComboValueType, "ACTION", ScanValueTypeChanged);
 
 	m_hCheckFastScan = IupToggle("Fast Scan", nullptr);
 	IupSetAttribute(m_hCheckFastScan, "VALUE", "ON");
@@ -306,11 +406,23 @@ void csMain::Open()
 	m_hTextFastScanAlign = IupText(nullptr);
 	IupSetAttribute(m_hTextFastScanAlign, "VALUE", "4");
 
+	Ihandle* radioFloatTruncated = IupToggle("Truncated", nullptr);
+	Ihandle* radioFloatRounded = IupToggle("Rounded", nullptr);
+	Ihandle* radioFloatRoundedExtreme = IupToggle("Rounded (Extreme)", nullptr);
+
+	IupSetHandle("trunc", radioFloatTruncated);
+	IupSetHandle("round", radioFloatRounded);
+	IupSetHandle("round2", radioFloatRoundedExtreme);
+
+	m_hFloatMethod = IupRadio(IupSetAttributes(IupVbox(radioFloatTruncated, radioFloatRounded, radioFloatRoundedExtreme, nullptr), "MARGIN=0x0, GAP=5"));
+	IupSetAttribute(m_hFloatMethod, "ACTIVE", "NO");
+
 	Ihandle* hFastScan = IupSetAttributes(IupHbox(m_hCheckFastScan, m_hTextFastScanAlign, nullptr), "MARGIN=0x0, GAP=5");
 
 	m_hCheckPauseWhileScanning = IupToggle("Pause while scanning", nullptr);
 
 	m_hFrameScanOptions = IupFrame(IupVbox(
+		m_hFloatMethod,
 		hFastScan,
 		m_hCheckPauseWhileScanning,
 		nullptr)
@@ -323,7 +435,7 @@ void csMain::Open()
 		hInput,
 		hValueType,
 		m_hFrameScanOptions,
-		nullptr), "MARGIN=10x0, GAP=5");
+		nullptr), "MARGIN=10x0, GAP=5, EXPAND=HORIZONTAL");
 
 	m_hListResults = IupList(nullptr);
 	IupSetAttribute(m_hListResults, "FONT", "Consolas, 9");

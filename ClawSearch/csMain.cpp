@@ -31,6 +31,8 @@ csMain::csMain()
 	m_currentScanMap.page = nullptr;
 	m_currentScan = 0;
 	m_currentScanValueType = SVT_Unknown;
+	m_currentScanValueMethod = SVM_Unknown;
+	m_currentScanFloatTruncate = false;
 
 	m_scanSize = 0x1000;
 	m_currentBuffer = nullptr;
@@ -87,7 +89,7 @@ void csMain::PerformScan()
 	bool inputIsHex = !strcmp(IupGetAttribute(m_hCheckHex, "VALUE"), "ON");
 	bool pauseWhileScanning = DbgIsRunning() && !strcmp(IupGetAttribute(m_hCheckPauseWhileScanning, "VALUE"), "ON");
 	bool fastScan = !strcmp(IupGetAttribute(m_hCheckFastScan, "VALUE"), "ON");
-	bool floatTruncate = !strcmp(IupGetAttribute(m_hFloatMethod, "VALUE"), "trunc");
+	m_currentScanFloatTruncate = !strcmp(IupGetAttribute(m_hFloatMethod, "VALUE"), "trunc");
 
 	int scanStep = 1;
 	if (fastScan) {
@@ -98,8 +100,6 @@ void csMain::PerformScan()
 		DbgCmdExecDirect("pause");
 		_plugin_waituntilpaused();
 	}
-
-	SearchValueMethod svm = MethodForType(m_currentScanValueType);
 
 	//TODO: Clean this up
 #define HANDLE_SEARCHFOR_SCANF(format, type) type searchFor; \
@@ -135,12 +135,12 @@ void csMain::PerformScan()
 		}
 	} else if (m_currentScanValueType == SVT_Float) {
 		HANDLE_SEARCHFOR_SCANF("%f", float);
-		if (floatTruncate) {
+		if (m_currentScanFloatTruncate) {
 			*(float*)find = trunc(*(float*)find);
 		}
 	} else if (m_currentScanValueType == SVT_Double) {
 		HANDLE_SEARCHFOR_SCANF("%lf", double);
-		if (floatTruncate) {
+		if (m_currentScanFloatTruncate) {
 			*(double*)find = trunc(*(double*)find);
 		}
 	}
@@ -161,6 +161,7 @@ void csMain::PerformScan()
 		BridgeFree(m_currentScanMap.page);
 	}
 
+	// If this is the very first scan
 	if (m_currentScan == 1) {
 		DbgMemMap(&m_currentScanMap);
 		// For each memory region
@@ -182,58 +183,13 @@ void csMain::PerformScan()
 
 				// Perform search on buffer
 				for (ptr_t s = 0; s < sz; s += scanStep) {
-					if (svm == SVM_Integer) {
-						// For basic integer types
-						
-						// Stop if find size is beyond scan size
-						if (s + findSize > m_scanSize) {
-							break;
-						}
+					// Stop if find size is beyond scan size
+					if (s + findSize > sz) {
+						break;
+					}
 
-						// Go to next if the bytes don't match
-						if (memcmp(m_currentBuffer + s, find, findSize) != 0) {
-							continue;
-						}
-
-					} else if (svm == SVM_Float) {
-						// For floating point types
-
-						// Stop is find size is beyond scan size
-						if (s + findSize > m_scanSize) {
-							continue;
-						}
-
-						// Depending on which type of float
-						if (m_currentScanValueType == SVT_Float) {
-							float &f = *(float*)(m_currentBuffer + s);
-
-							// If our source float is truncated
-							if (floatTruncate) {
-								f = trunc(f);
-							}
-
-							// Go to next if the float does not compare
-							if (!cmpfloat(f, *(float*)find)) {
-								continue;
-							}
-						} else if (m_currentScanValueType == SVT_Double) {
-							double &d = *(double*)(m_currentBuffer + s);
-
-							// If our source double is truncated
-							if (floatTruncate) {
-								d = truncl(d);
-							}
-
-							// Go to next if the double does not compare
-							if (!cmpdouble(d, *(double*)find)) {
-								continue;
-							}
-						} else {
-							assert(false);
-							continue;
-						}
-					} else {
-						assert(false);
+					// Compare at this position
+					if (!CompareData(m_currentBuffer + s, find, findSize)) {
 						continue;
 					}
 
@@ -245,6 +201,7 @@ void csMain::PerformScan()
 						memcpy(&result.m_valueFound, m_currentBuffer + s, findSize);
 					}
 
+					// We can step forward now
 					s += findSize;
 				}
 			}
@@ -253,15 +210,16 @@ void csMain::PerformScan()
 
 	m_currentCompare = (unsigned char*)malloc(findSize);
 
+	// If this is our not our first scan
 	if (m_currentScan > 1) {
 		for (int i = 0; i < m_results.Count(); i++) {
 			SearchResult &result = m_results[i];
 
-			// This is really slow!
+			//TODO: This is really slow!
 			DbgMemRead(result.m_base + result.m_offset, m_currentCompare, findSize);
 
-			//TODO: Generic type support here instead of only integers
-			if (memcmp(m_currentCompare, find, findSize) != 0) {
+			if (!CompareData(m_currentCompare, find, findSize) != 0) {
+				//TODO: A linked list might be faster here!
 				m_results.RemoveAt(i);
 				i--;
 			}
@@ -307,6 +265,58 @@ void csMain::PerformScan()
 
 	IupSetAttribute(m_hButtonFirstScan, "ACTIVE", "YES");
 	IupSetAttribute(m_hButtonNextScan, "ACTIVE", "YES");
+}
+
+bool csMain::CompareData(void* p, void* src, int sz)
+{
+	if (m_currentScanValueMethod == SVM_Integer) {
+		// For basic integer types we can simply compare the bytes
+		if (memcmp(p, src, sz) != 0) {
+			return false;
+		}
+
+	} else if (m_currentScanValueMethod == SVM_Float) {
+		// For floating point types it depends on the size
+		if (m_currentScanValueType == SVT_Float) {
+			float &f = *(float*)p;
+
+			// If our source float is truncated
+			if (m_currentScanFloatTruncate) {
+				f = trunc(f);
+			}
+
+			// Go to next if the float does not compare
+			if (!cmpfloat(f, *(float*)src)) {
+				return false;
+			}
+
+		} else if (m_currentScanValueType == SVT_Double) {
+			double &d = *(double*)p;
+
+			// If our source double is truncated
+			if (m_currentScanFloatTruncate) {
+				d = truncl(d);
+			}
+
+			// Go to next if the double does not compare
+			if (!cmpdouble(d, *(double*)src)) {
+				return false;
+			}
+
+		} else {
+			// Unknown floating point type
+			assert(false);
+			return false;
+		}
+
+	} else {
+		// Unknown scan value method
+		assert(false);
+		return false;
+	}
+
+	// It matches!
+	return true;
 }
 
 int csMain::FirstScan()
@@ -361,10 +371,10 @@ void csMain::ResultClicked(char* text, int item, int state)
 int csMain::ScanValueTypeChanged()
 {
 	m_currentScanValueType = (SearchValueType)IupGetInt(m_hComboValueType, "VALUE");
+	m_currentScanValueMethod = MethodForType(m_currentScanValueType);
 
-	SearchValueMethod svm = MethodForType(m_currentScanValueType);
-	IupSetAttribute(m_hCheckHex, "ACTIVE", svm == SVM_Integer ? "YES" : "NO");
-	IupSetAttribute(m_hFloatMethod, "ACTIVE", svm == SVM_Float ? "YES" : "NO");
+	IupSetAttribute(m_hCheckHex, "ACTIVE", m_currentScanValueMethod == SVM_Integer ? "YES" : "NO");
+	IupSetAttribute(m_hFloatMethod, "ACTIVE", m_currentScanValueMethod == SVM_Float ? "YES" : "NO");
 
 	return 0;
 }

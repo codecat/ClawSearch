@@ -65,6 +65,8 @@ public:
 	MEMMAP m_currentScanMap;
 	int m_currentScan;
 	SearchValueType m_currentScanValueType;
+	SearchValueMethod m_currentScanValueMethod;
+	bool m_currentScanFloatTruncate;
 
 	s::Array<SearchResult, 100> m_results;
 
@@ -81,6 +83,7 @@ public:
 	int SearchWindowClosing();
 
 	void PerformScan();
+	bool CompareData(void* p, void* src, int sz);
 
 	int FirstScan();
 	int NextScan();

@@ -20,6 +20,9 @@ csMain::csMain()
 	m_hCheckHex = nullptr;
 	m_hTextInput = nullptr;
 
+	m_hComboScanType = nullptr;
+	m_hComboValueType = nullptr;
+
 	m_hFrameScanOptions = nullptr;
 	m_hFloatMethod = nullptr;
 	m_hCheckFastScan = nullptr;
@@ -65,6 +68,7 @@ void csMain::PerformScan(bool firstScan)
 {
 	IupSetAttribute(m_hButtonFirstScan, "ACTIVE", "NO");
 	IupSetAttribute(m_hButtonNextScan, "ACTIVE", "NO");
+	IupSetAttribute(m_hComboScanType, "ACTIVE", "NO");
 
 	m_scanner.m_inputText = IupGetAttribute(m_hTextInput, "VALUE");
 	m_scanner.m_inputIsHex = !strcmp(IupGetAttribute(m_hCheckHex, "VALUE"), "ON");
@@ -116,11 +120,13 @@ void csMain::PerformScan(bool firstScan)
 
 	IupSetAttribute(m_hButtonFirstScan, "ACTIVE", "YES");
 	IupSetAttribute(m_hButtonNextScan, "ACTIVE", "YES");
+	IupSetAttribute(m_hComboScanType, "ACTIVE", "YES");
 }
 
 int csMain::FirstScan()
 {
 	if (m_currentScan > 0) {
+		// New scan
 		m_currentScan = 0;
 
 		IupSetAttribute(m_hListResults, "REMOVEITEM", "ALL");
@@ -129,12 +135,16 @@ int csMain::FirstScan()
 
 		IupSetAttribute(m_hComboValueType, "ACTIVE", "YES");
 		IupSetAttribute(m_hButtonNextScan, "ACTIVE", "NO");
+
+		SetScanTypeCombo(true);
 		return 0;
 	}
 
+	// First scan
 	m_currentScan = 1;
 
 	IupSetAttribute(m_hButtonFirstScan, "TITLE", "New Scan");
+	SetScanTypeCombo(false);
 
 	PerformScan(true);
 
@@ -168,13 +178,54 @@ void csMain::ResultClicked(char* text, int item, int state)
 
 int csMain::ScanValueTypeChanged()
 {
+	bool inputHidden = false;
+
+	if (m_currentScan == 0) {
+		m_scanner.m_initialScanType = (InitialScanType)IupGetInt(m_hComboScanType, "VALUE");
+		IupSetAttribute(m_hCheckHex, "ACTIVE", "YES");
+		IupSetAttribute(m_hTextInput, "ACTIVE", "YES");
+	} else {
+		m_scanner.m_currentScanType = (ScanType)IupGetInt(m_hComboScanType, "VALUE");
+		if (m_scanner.m_currentScanType == ST_Changed || m_scanner.m_currentScanType == ST_Unchanged || m_scanner.m_currentScanType == ST_Increased || m_scanner.m_currentScanType == ST_Decreased) {
+			IupSetAttribute(m_hCheckHex, "ACTIVE", "NO");
+			IupSetAttribute(m_hTextInput, "ACTIVE", "NO");
+			inputHidden = true;
+		} else {
+			IupSetAttribute(m_hCheckHex, "ACTIVE", "YES");
+			IupSetAttribute(m_hTextInput, "ACTIVE", "YES");
+		}
+	}
 	m_scanner.m_currentScanValueType = (SearchValueType)IupGetInt(m_hComboValueType, "VALUE");
 	m_scanner.m_currentScanValueMethod = MethodForType(m_scanner.m_currentScanValueType);
 
-	IupSetAttribute(m_hCheckHex, "ACTIVE", m_scanner.m_currentScanValueMethod == SVM_Integer ? "YES" : "NO");
+	if (!inputHidden) {
+		IupSetAttribute(m_hCheckHex, "ACTIVE", m_scanner.m_currentScanValueMethod == SVM_Integer ? "YES" : "NO");
+	}
 	IupSetAttribute(m_hFloatMethod, "ACTIVE", m_scanner.m_currentScanValueMethod == SVM_Float ? "YES" : "NO");
 
 	return 0;
+}
+
+void csMain::SetScanTypeCombo(bool firstScan)
+{
+	IupSetAttribute(m_hComboScanType, "REMOVEITEM", "ALL");
+
+	if (firstScan) {
+		IupSetAttribute(m_hComboScanType, "1", "Exact value");
+		IupSetAttribute(m_hComboScanType, "2", "Bigger than...");
+		IupSetAttribute(m_hComboScanType, "3", "Smaller than...");
+		IupSetInt(m_hComboScanType, "VALUE", (int)m_scanner.m_initialScanType);
+		return;
+	}
+
+	IupSetAttribute(m_hComboScanType, "1", "Exact value");
+	IupSetAttribute(m_hComboScanType, "2", "Changed value");
+	IupSetAttribute(m_hComboScanType, "3", "Unchanged value");
+	IupSetAttribute(m_hComboScanType, "4", "Bigger than...");
+	IupSetAttribute(m_hComboScanType, "5", "Smaller than...");
+	IupSetAttribute(m_hComboScanType, "6", "Increased value");
+	IupSetAttribute(m_hComboScanType, "7", "Decreased value");
+	IupSetInt(m_hComboScanType, "VALUE", (int)m_scanner.m_currentScanType);
 }
 
 void csMain::Open()
@@ -196,16 +247,26 @@ void csMain::Open()
 	m_hTextInput = IupSetAttributes(IupText(nullptr), "EXPAND=HORIZONTAL");
 	Ihandle* hInput = IupSetAttributes(IupHbox(m_hCheckHex, m_hTextInput, nullptr), "MARGIN=0x0, GAP=5");
 
+	m_hComboScanType = IupList(nullptr);
+	IupSetAttribute(m_hComboScanType, "DROPDOWN", "YES");
+	IupSetAttribute(m_hComboScanType, "EXPAND", "HORIZONTAL");
+	IupSetAttribute(m_hComboScanType, "VISIBLEITEMS", "10");
+	SetScanTypeCombo(true);
+	Ihandle* hScanType = IupSetAttributes(IupHbox(IupLabel("Scan type"), m_hComboScanType, nullptr), "MARGIN=0x0, GAP=5");
+	CLAW_SETCALLBACK(m_hComboScanType, "ACTION", ScanValueTypeChanged);
+
 	m_hComboValueType = IupList(nullptr);
 	IupSetAttribute(m_hComboValueType, "DROPDOWN", "YES");
+	IupSetAttribute(m_hComboValueType, "EXPAND", "HORIZONTAL");
+	IupSetAttribute(m_hComboValueType, "VISIBLEITEMS", "10");
 	IupSetAttribute(m_hComboValueType, "1", "Byte");
 	IupSetAttribute(m_hComboValueType, "2", "2 Bytes");
 	IupSetAttribute(m_hComboValueType, "3", "4 Bytes");
 	IupSetAttribute(m_hComboValueType, "4", "8 Bytes");
 	IupSetAttribute(m_hComboValueType, "5", "Float");
 	IupSetAttribute(m_hComboValueType, "6", "Double");
-	IupSetAttribute(m_hComboValueType, "VALUE", "3");
-	Ihandle* hValueType = IupSetAttributes(IupHbox(m_hComboValueType, nullptr), "VISIBLEITEMS=10, EXPAND=YES, MARGIN=0x0, GAP=5");
+	IupSetInt(m_hComboValueType, "VALUE", (int)m_scanner.m_currentScanValueType);
+	Ihandle* hValueType = IupSetAttributes(IupHbox(IupLabel("Value type"), m_hComboValueType, nullptr), "MARGIN=0x0, GAP=5");
 	CLAW_SETCALLBACK(m_hComboValueType, "ACTION", ScanValueTypeChanged);
 
 	m_hCheckFastScan = IupToggle("Fast Scan", nullptr);
@@ -241,6 +302,7 @@ void csMain::Open()
 	Ihandle* vControls = IupSetAttributes(IupVbox(
 		hButtons,
 		hInput,
+		hScanType,
 		hValueType,
 		m_hFrameScanOptions,
 		nullptr), "MARGIN=10x0, GAP=5, EXPAND=HORIZONTAL");

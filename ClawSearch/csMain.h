@@ -22,6 +22,7 @@ public:
 	Ihandle* m_hTextInput;
 
 	// Value type input
+	Ihandle* m_hComboScanType;
 	Ihandle* m_hComboValueType;
 
 	// Scan options
@@ -58,6 +59,8 @@ public:
 	int NextScan();
 	void ResultClicked(char* text, int item, int state);
 	int ScanValueTypeChanged();
+
+	void SetScanTypeCombo(bool firstScan);
 
 	void Open();
 	void Close();

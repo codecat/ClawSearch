@@ -12,8 +12,10 @@ csScanner::csScanner(csMain* main)
 	m_currentScanMap.count = 0;
 	m_currentScanMap.page = nullptr;
 
-	m_currentScanValueType = SVT_Unknown;
-	m_currentScanValueMethod = SVM_Unknown;
+	m_initialScanType = IST_Equal;
+	m_currentScanType = ST_Equal;
+	m_currentScanValueType = SVT_Int32;
+	m_currentScanValueMethod = SVM_Integer;
 
 	m_inputText = nullptr;
 	m_inputIsHex = false;
@@ -123,6 +125,7 @@ void csScanner::PerformScan(bool firstScan)
 	// If this is the very first scan
 	if (firstScan) {
 		DbgMemMap(&m_currentScanMap);
+
 		// For each memory region
 		for (int iMap = 0; iMap < m_currentScanMap.count; iMap++) {
 			MEMPAGE &memPage = m_currentScanMap.page[iMap];
@@ -148,7 +151,7 @@ void csScanner::PerformScan(bool firstScan)
 					}
 
 					// Compare at this position
-					if (!CompareData(m_currentBuffer + s, find, findSize)) {
+					if (!MatchDataInitial(m_currentBuffer + s, find, findSize)) {
 						continue;
 					}
 
@@ -176,13 +179,22 @@ void csScanner::PerformScan(bool firstScan)
 			SearchResult &result = m_results[i];
 
 			//TODO: This is really slow!
-			DbgMemRead(result.m_base + result.m_offset, m_currentCompare, findSize);
 
-			if (!CompareData(m_currentCompare, find, findSize) != 0) {
-				//TODO: A linked list might be faster here!
-				m_results.RemoveAt(i);
-				i--;
+			ptr_t ptr = result.m_base + result.m_offset;
+
+			// The memory must still be readable
+			if (DbgMemIsValidReadPtr(ptr)) {
+				DbgMemRead(result.m_base + result.m_offset, m_currentCompare, findSize);
+
+				// Match data
+				if (MatchDataNext(m_currentCompare, find, result, findSize)) {
+					continue;
+				}
 			}
+
+			//TODO: A linked list might be faster here!
+			m_results.RemoveAt(i);
+			i--;
 		}
 	}
 
@@ -195,7 +207,29 @@ void csScanner::PerformScan(bool firstScan)
 	m_currentCompare = nullptr;
 }
 
-bool csScanner::CompareData(void* p, void* src, int sz)
+bool csScanner::MatchDataInitial(void* p, void* src, int sz)
+{
+	switch (m_initialScanType) {
+	case IST_Equal: return MatchDataEqual(p, src, sz);
+	case IST_MoreThan: return MatchDataDifference(p, src, sz, 1);
+	case IST_LessThan: return MatchDataDifference(p, src, sz, -1);
+	default: assert(false); return false;
+	}
+}
+
+bool csScanner::MatchDataNext(void* p, void* src, SearchResult &result, int sz)
+{
+	switch (m_currentScanType) {
+	case ST_Equal: return MatchDataEqual(p, src, sz);
+	case ST_Changed: assert(sz <= 8); return !MatchDataEqual(p, &result.m_valueFound, sz);
+	case ST_MoreThan: return MatchDataDifference(p, src, sz, 1);
+	case ST_LessThan: return MatchDataDifference(p, src, sz, -1);
+	case ST_Increased: assert(sz <= 8); return MatchDataDifference(p, &result.m_valueFound, sz, 1);
+	case ST_Decreased: assert(sz <= 8); return MatchDataDifference(p, &result.m_valueFound, sz, -1);
+	}
+}
+
+bool csScanner::MatchDataEqual(void* p, void* src, int sz)
 {
 	if (m_currentScanValueMethod == SVM_Integer) {
 		// For basic integer types we can simply compare the bytes
@@ -293,4 +327,39 @@ bool csScanner::CompareData(void* p, void* src, int sz)
 
 	// It matches!
 	return true;
+}
+
+bool csScanner::MatchDataDifference(void* p, void* src, int sz, int dir)
+{
+	//TODO: Clean this up
+#define HANDLE_DIFFERENCE(type) const type &orig = *(type*)src; \
+	const type &v = *(type*)p; \
+	switch (dir) { \
+	case -1: return v < orig; \
+	case 1: return v > orig; \
+	default: assert(false); return false; \
+	}
+
+	if (m_currentScanValueType == SVT_Char) {
+		HANDLE_DIFFERENCE(char);
+	} else if (m_currentScanValueType == SVT_Int16) {
+		HANDLE_DIFFERENCE(int16_t);
+	} else if (m_currentScanValueType == SVT_Int32) {
+		HANDLE_DIFFERENCE(int32_t);
+	} else if (m_currentScanValueType == SVT_Int64) {
+		HANDLE_DIFFERENCE(int64_t);
+
+	} else if (m_currentScanValueType == SVT_Float) {
+		HANDLE_DIFFERENCE(float);
+	} else if (m_currentScanValueType == SVT_Double) {
+		HANDLE_DIFFERENCE(double);
+
+	} else {
+		// Unhandled type
+		assert(false);
+	}
+
+	return false;
+
+#undef HANDLE_DIFFERENCE
 }

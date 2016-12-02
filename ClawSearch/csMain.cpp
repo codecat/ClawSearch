@@ -207,6 +207,7 @@ void csMain::PerformScan()
 					SearchResult &result = m_results.Add();
 					result.m_base = p;
 					result.m_offset = s;
+					result.m_valueFound = 0;
 					if (findSize <= sizeof(uint64_t)) {
 						memcpy(&result.m_valueFound, m_currentBuffer + s, findSize);
 					}

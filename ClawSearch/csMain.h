@@ -67,6 +67,9 @@ public:
 	SearchValueType m_currentScanValueType;
 	SearchValueMethod m_currentScanValueMethod;
 	bool m_currentScanFloatTruncate;
+	bool m_currentScanFloatRound;
+	bool m_currentScanFloatRound2;
+	int m_currentScanFloatRoundNum;
 
 	s::Array<SearchResult, 100> m_results;
 
@@ -99,8 +102,8 @@ extern csMain* _csMain;
 void OpenSearch();
 void CloseSearch();
 
-inline bool cmpfloat(const float &a, const float &b) { return fabsf(a - b) < FLT_EPSILON; }
-inline bool cmpdouble(const double &a, const double &b) { return fabsl(a - b) < DBL_EPSILON; }
+inline bool cmpfloat(const float &a, const float &b, float e = FLT_EPSILON) { return fabsf(a - b) < e; }
+inline bool cmpdouble(const double &a, const double &b, double e = DBL_EPSILON) { return fabsl(a - b) < e; }
 
 #define CLAW_SETCALLBACK(handle, cb, name) IupSetCallback(handle, cb, _claw_##name);
 

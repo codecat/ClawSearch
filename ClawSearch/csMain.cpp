@@ -2,6 +2,8 @@
 
 #include "plugin.h"
 
+#include "csMath.h"
+
 CLAW_CALLBACK(SearchWindowClosing);
 CLAW_CALLBACK(FirstScan);
 CLAW_CALLBACK(NextScan);
@@ -33,6 +35,9 @@ csMain::csMain()
 	m_currentScanValueType = SVT_Unknown;
 	m_currentScanValueMethod = SVM_Unknown;
 	m_currentScanFloatTruncate = false;
+	m_currentScanFloatRound = false;
+	m_currentScanFloatRound2 = false;
+	m_currentScanFloatRoundNum = 0;
 
 	m_scanSize = 0x1000;
 	m_currentBuffer = nullptr;
@@ -90,6 +95,8 @@ void csMain::PerformScan()
 	bool pauseWhileScanning = DbgIsRunning() && !strcmp(IupGetAttribute(m_hCheckPauseWhileScanning, "VALUE"), "ON");
 	bool fastScan = !strcmp(IupGetAttribute(m_hCheckFastScan, "VALUE"), "ON");
 	m_currentScanFloatTruncate = !strcmp(IupGetAttribute(m_hFloatMethod, "VALUE"), "trunc");
+	m_currentScanFloatRound = !strcmp(IupGetAttribute(m_hFloatMethod, "VALUE"), "round");
+	m_currentScanFloatRound2 = !strcmp(IupGetAttribute(m_hFloatMethod, "VALUE"), "round2");
 
 	int scanStep = 1;
 	if (fastScan) {
@@ -135,14 +142,8 @@ void csMain::PerformScan()
 		}
 	} else if (m_currentScanValueType == SVT_Float) {
 		HANDLE_SEARCHFOR_SCANF("%f", float);
-		if (m_currentScanFloatTruncate) {
-			*(float*)find = trunc(*(float*)find);
-		}
 	} else if (m_currentScanValueType == SVT_Double) {
 		HANDLE_SEARCHFOR_SCANF("%lf", double);
-		if (m_currentScanFloatTruncate) {
-			*(double*)find = trunc(*(double*)find);
-		}
 	}
 
 #undef HANDLE_SEARCHFOR
@@ -150,6 +151,15 @@ void csMain::PerformScan()
 	if (find == nullptr) {
 		IupMessage("Error", "Unhandled value type!");
 		return;
+	}
+
+	if (m_currentScanValueMethod == SVM_Float) {
+		char* afterPeriod = strchr(inputText, '.');
+		if (afterPeriod == nullptr) {
+			m_currentScanFloatRoundNum = 0;
+		} else {
+			m_currentScanFloatRoundNum = strlen(afterPeriod + 1);
+		}
 	}
 
 	if (m_currentBuffer == nullptr) {
@@ -210,7 +220,7 @@ void csMain::PerformScan()
 
 	m_currentCompare = (unsigned char*)malloc(findSize);
 
-	// If this is our not our first scan
+	// If this is not our first scan
 	if (m_currentScan > 1) {
 		for (int i = 0; i < m_results.Count(); i++) {
 			SearchResult &result = m_results[i];
@@ -278,29 +288,77 @@ bool csMain::CompareData(void* p, void* src, int sz)
 	} else if (m_currentScanValueMethod == SVM_Float) {
 		// For floating point types it depends on the size
 		if (m_currentScanValueType == SVT_Float) {
-			float &f = *(float*)p;
+			const float &orig = *(float*)src;
+			const float &f = *(float*)p;
 
-			// If our source float is truncated
-			if (m_currentScanFloatTruncate) {
-				f = trunc(f);
-			}
+			if (m_currentScanFloatRound) {
+				// If our source float is rounded
+				float rounded = roundf_to(f, m_currentScanFloatRoundNum);
 
-			// Go to next if the float does not compare
-			if (!cmpfloat(f, *(float*)src)) {
-				return false;
+				// Go to next if the float does not compare
+				if (!cmpfloat(rounded, orig)) {
+					return false;
+				}
+			} else if (m_currentScanFloatRound2) {
+				// If our source float is extreme rounded
+				float rounded1 = ceilf_to(f, m_currentScanFloatRoundNum);
+				float rounded2 = floorf_to(f, m_currentScanFloatRoundNum);
+
+				// Go to next if the float does not compare
+				if (!cmpfloat(rounded1, orig) && !cmpfloat(rounded2, orig)) {
+					return false;
+				}
+			} else if (m_currentScanFloatTruncate) {
+				// If our source float is truncated
+				float truncated = truncf_to(f, m_currentScanFloatRoundNum);
+
+				// Go to next if the float does not compare
+				if (!cmpfloat(truncated, orig)) {
+					return false;
+				}
+			} else {
+				// Regular float compare using epsilon
+				if (!cmpfloat(f, orig)) {
+					// Go to next if the float does not compare
+					return false;
+				}
 			}
 
 		} else if (m_currentScanValueType == SVT_Double) {
-			double &d = *(double*)p;
+			const double &orig = *(double*)src;
+			const double &d = *(double*)p;
 
-			// If our source double is truncated
-			if (m_currentScanFloatTruncate) {
-				d = truncl(d);
-			}
+			if (m_currentScanFloatRound) {
+				// If our source double is rounded
+				double rounded = roundl_to(d, m_currentScanFloatRoundNum);
 
-			// Go to next if the double does not compare
-			if (!cmpdouble(d, *(double*)src)) {
-				return false;
+				// Go to next if the double does not compare
+				if (!cmpdouble(rounded, orig)) {
+					return false;
+				}
+			} else if (m_currentScanFloatRound2) {
+				// If our source double is extreme rounded
+				double rounded1 = ceill_to(d, m_currentScanFloatRoundNum);
+				double rounded2 = floorl_to(d, m_currentScanFloatRoundNum);
+
+				// Go to next if the double does not compare
+				if (!cmpdouble(rounded1, orig) && !cmpdouble(rounded2, orig)) {
+					return false;
+				}
+			} else if (m_currentScanFloatTruncate) {
+				// If our source double is truncated
+				double truncated = truncl_to(d, m_currentScanFloatRoundNum);
+
+				// Go to next if the double does not compare
+				if (!cmpdouble(truncated, orig)) {
+					return false;
+				}
+			} else {
+				// Regular double compare using epsilon
+				if (!cmpdouble(d, orig)) {
+					// Go to next if the double does not compare
+					return false;
+				}
 			}
 
 		} else {
@@ -407,7 +465,7 @@ void csMain::Open()
 	IupSetAttribute(m_hComboValueType, "5", "Float");
 	IupSetAttribute(m_hComboValueType, "6", "Double");
 	IupSetAttribute(m_hComboValueType, "VALUE", "3");
-	Ihandle* hValueType = IupSetAttributes(IupHbox(m_hComboValueType, nullptr), "MARGIN=0x0, GAP=5");
+	Ihandle* hValueType = IupSetAttributes(IupHbox(m_hComboValueType, nullptr), "VISIBLEITEMS=10, EXPAND=YES, MARGIN=0x0, GAP=5");
 	CLAW_SETCALLBACK(m_hComboValueType, "ACTION", ScanValueTypeChanged);
 
 	m_hCheckFastScan = IupToggle("Fast Scan", nullptr);
@@ -436,9 +494,9 @@ void csMain::Open()
 		hFastScan,
 		m_hCheckPauseWhileScanning,
 		nullptr)
-		);
+	);
 	IupSetAttribute(m_hFrameScanOptions, "TITLE", "Scan Options");
-	IupSetAttribute(m_hFrameScanOptions, "EXPAND", "HORIZONTAL");
+	IupSetAttribute(m_hFrameScanOptions, "EXPAND", "YES");
 
 	Ihandle* vControls = IupSetAttributes(IupVbox(
 		hButtons,

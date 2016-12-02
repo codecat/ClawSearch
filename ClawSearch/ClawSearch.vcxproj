@@ -252,6 +252,7 @@
     <ClInclude Include="..\iup\include\iup_scintilla.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="csMain.h" />
+    <ClInclude Include="csMath.h" />
     <ClInclude Include="plugin.h" />
     <ClInclude Include="pluginmain.h" />
     <ClInclude Include="pluginsdk\bridgegraph.h" />

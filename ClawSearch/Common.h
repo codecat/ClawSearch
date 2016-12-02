@@ -1,7 +1,5 @@
 #pragma once
 
-#define _CRT_SECURE_NO_WARNINGS
-
 #define SCRATCH_NAMESPACE s
 #include "Scratch/Scratch.hpp"
 

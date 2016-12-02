@@ -3,30 +3,9 @@
 #include <iup.h>
 #include <iupcontrols.h>
 
-#include "Common.h"
-#include "SearchResult.h"
-
 #include "pluginsdk/bridgemain.h"
 
-enum SearchValueType
-{
-	SVT_Unknown,
-
-	SVT_Char,
-	SVT_Int16,
-	SVT_Int32,
-	SVT_Int64,
-
-	SVT_Float,
-	SVT_Double,
-};
-
-enum SearchValueMethod
-{
-	SVM_Unknown,
-	SVM_Integer, // char, int16, int32, int64
-	SVM_Float, // float, double
-};
+#include "csScanner.h"
 
 class csMain
 {
@@ -61,21 +40,9 @@ public:
 	// List results
 	Ihandle* m_hListResults;
 
-	//
-	MEMMAP m_currentScanMap;
+	// Scanner
+	csScanner m_scanner;
 	int m_currentScan;
-	SearchValueType m_currentScanValueType;
-	SearchValueMethod m_currentScanValueMethod;
-	bool m_currentScanFloatTruncate;
-	bool m_currentScanFloatRound;
-	bool m_currentScanFloatRound2;
-	int m_currentScanFloatRoundNum;
-
-	s::Array<SearchResult, 100> m_results;
-
-	size_t m_scanSize;
-	unsigned char* m_currentBuffer;
-	unsigned char* m_currentCompare;
 
 public:
 	csMain();
@@ -85,8 +52,7 @@ public:
 
 	int SearchWindowClosing();
 
-	void PerformScan();
-	bool CompareData(void* p, void* src, int sz);
+	void PerformScan(bool firstScan);
 
 	int FirstScan();
 	int NextScan();

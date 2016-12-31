@@ -120,6 +120,7 @@ void csScanner::PerformScan(bool firstScan)
 
 	if (m_currentScanMap.page != nullptr) {
 		BridgeFree(m_currentScanMap.page);
+		m_currentScanMap.page = nullptr;
 	}
 
 	// If this is the very first scan
@@ -203,6 +204,7 @@ void csScanner::PerformScan(bool firstScan)
 	}
 
 	free(find);
+	find = nullptr;
 	free(m_currentCompare);
 	m_currentCompare = nullptr;
 }

@@ -204,7 +204,6 @@ void csScanner::PerformScan(bool firstScan)
 	}
 
 	free(find);
-	find = nullptr;
 	free(m_currentCompare);
 	m_currentCompare = nullptr;
 }

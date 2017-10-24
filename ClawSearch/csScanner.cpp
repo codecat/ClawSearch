@@ -228,6 +228,7 @@ bool csScanner::MatchDataNext(void* p, void* src, SearchResult &result, int sz)
 	case ST_Increased: assert(sz <= 8); return MatchDataDifference(p, &result.m_valueFound, sz, 1);
 	case ST_Decreased: assert(sz <= 8); return MatchDataDifference(p, &result.m_valueFound, sz, -1);
 	}
+	return false;
 }
 
 bool csScanner::MatchDataEqual(void* p, void* src, int sz)

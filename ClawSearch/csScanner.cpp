@@ -109,7 +109,7 @@ void csScanner::PerformScan(bool firstScan)
 		if (afterPeriod == nullptr) {
 			m_currentScanFloatRoundNum = 0;
 		} else {
-			m_currentScanFloatRoundNum = strlen(afterPeriod + 1);
+			m_currentScanFloatRoundNum = (int)strlen(afterPeriod + 1);
 		}
 	}
 
@@ -152,7 +152,7 @@ void csScanner::PerformScan(bool firstScan)
 					}
 
 					// Compare at this position
-					if (!MatchDataInitial(m_currentBuffer + s, find, findSize)) {
+					if (!MatchDataInitial(m_currentBuffer + s, find, (int)findSize)) {
 						continue;
 					}
 
@@ -188,7 +188,7 @@ void csScanner::PerformScan(bool firstScan)
 				DbgMemRead(result.m_base + result.m_offset, m_currentCompare, findSize);
 
 				// Match data
-				if (MatchDataNext(m_currentCompare, find, result, findSize)) {
+				if (MatchDataNext(m_currentCompare, find, result, (int)findSize)) {
 					continue;
 				}
 			}

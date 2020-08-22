@@ -49,6 +49,7 @@ bool pluginInit(PLUG_INITSTRUCT* initStruct)
 //Deinitialize your plugin data here (clearing menus optional).
 bool pluginStop()
 {
+	CloseSearch();
 	IupClose();
 
 	_plugin_menuclear(hMenu);

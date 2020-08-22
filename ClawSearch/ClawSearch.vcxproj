@@ -266,17 +266,6 @@
     <ClInclude Include="pluginsdk\bridgegraph.h" />
     <ClInclude Include="pluginsdk\bridgelist.h" />
     <ClInclude Include="pluginsdk\bridgemain.h" />
-    <ClInclude Include="pluginsdk\capstone\arm.h" />
-    <ClInclude Include="pluginsdk\capstone\arm64.h" />
-    <ClInclude Include="pluginsdk\capstone\capstone.h" />
-    <ClInclude Include="pluginsdk\capstone\m68k.h" />
-    <ClInclude Include="pluginsdk\capstone\mips.h" />
-    <ClInclude Include="pluginsdk\capstone\platform.h" />
-    <ClInclude Include="pluginsdk\capstone\ppc.h" />
-    <ClInclude Include="pluginsdk\capstone\sparc.h" />
-    <ClInclude Include="pluginsdk\capstone\systemz.h" />
-    <ClInclude Include="pluginsdk\capstone\x86.h" />
-    <ClInclude Include="pluginsdk\capstone\xcore.h" />
     <ClInclude Include="pluginsdk\dbghelp\dbghelp.h" />
     <ClInclude Include="pluginsdk\DeviceNameResolver\DeviceNameResolver.h" />
     <ClInclude Include="pluginsdk\jansson\jansson.h" />
@@ -287,39 +276,6 @@
     <ClInclude Include="pluginsdk\lz4\lz4hc.h" />
     <ClInclude Include="pluginsdk\TitanEngine\TitanEngine.h" />
     <ClInclude Include="pluginsdk\XEDParse\XEDParse.h" />
-    <ClInclude Include="pluginsdk\yara\yara.h" />
-    <ClInclude Include="pluginsdk\yara\yara\ahocorasick.h" />
-    <ClInclude Include="pluginsdk\yara\yara\arena.h" />
-    <ClInclude Include="pluginsdk\yara\yara\atoms.h" />
-    <ClInclude Include="pluginsdk\yara\yara\compiler.h" />
-    <ClInclude Include="pluginsdk\yara\yara\elf.h" />
-    <ClInclude Include="pluginsdk\yara\yara\error.h" />
-    <ClInclude Include="pluginsdk\yara\yara\exec.h" />
-    <ClInclude Include="pluginsdk\yara\yara\exefiles.h" />
-    <ClInclude Include="pluginsdk\yara\yara\filemap.h" />
-    <ClInclude Include="pluginsdk\yara\yara\globals.h" />
-    <ClInclude Include="pluginsdk\yara\yara\hash.h" />
-    <ClInclude Include="pluginsdk\yara\yara\hex_lexer.h" />
-    <ClInclude Include="pluginsdk\yara\yara\integers.h" />
-    <ClInclude Include="pluginsdk\yara\yara\lexer.h" />
-    <ClInclude Include="pluginsdk\yara\yara\libyara.h" />
-    <ClInclude Include="pluginsdk\yara\yara\limits.h" />
-    <ClInclude Include="pluginsdk\yara\yara\mem.h" />
-    <ClInclude Include="pluginsdk\yara\yara\modules.h" />
-    <ClInclude Include="pluginsdk\yara\yara\object.h" />
-    <ClInclude Include="pluginsdk\yara\yara\parser.h" />
-    <ClInclude Include="pluginsdk\yara\yara\pe.h" />
-    <ClInclude Include="pluginsdk\yara\yara\proc.h" />
-    <ClInclude Include="pluginsdk\yara\yara\re.h" />
-    <ClInclude Include="pluginsdk\yara\yara\re_lexer.h" />
-    <ClInclude Include="pluginsdk\yara\yara\rules.h" />
-    <ClInclude Include="pluginsdk\yara\yara\scan.h" />
-    <ClInclude Include="pluginsdk\yara\yara\sizedstr.h" />
-    <ClInclude Include="pluginsdk\yara\yara\stream.h" />
-    <ClInclude Include="pluginsdk\yara\yara\strutils.h" />
-    <ClInclude Include="pluginsdk\yara\yara\threading.h" />
-    <ClInclude Include="pluginsdk\yara\yara\types.h" />
-    <ClInclude Include="pluginsdk\yara\yara\utils.h" />
     <ClInclude Include="pluginsdk\_dbgfunctions.h" />
     <ClInclude Include="pluginsdk\_plugins.h" />
     <ClInclude Include="pluginsdk\_plugin_types.h" />
@@ -423,18 +379,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Library>
-    <Library Include="pluginsdk\capstone\capstone_x64.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </Library>
-    <Library Include="pluginsdk\capstone\capstone_x86.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </Library>
     <Library Include="pluginsdk\DeviceNameResolver\DeviceNameResolver_x64.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -514,18 +458,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Library>
     <Library Include="pluginsdk\XEDParse\XEDParse_x86.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="pluginsdk\yara\yara_x64.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </Library>
-    <Library Include="pluginsdk\yara\yara_x86.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

@@ -51,7 +51,7 @@ void csScanner::PerformScan(bool firstScan)
 	unsigned char* find = nullptr;
 
 	if (firstScan) {
-		m_results.Clear();
+		m_results.clear();
 	}
 
 	if (m_pauseWhileScanning) {
@@ -130,12 +130,12 @@ void csScanner::PerformScan(bool firstScan)
 		// For each memory region
 		for (int iMap = 0; iMap < m_currentScanMap.count; iMap++) {
 			MEMPAGE &memPage = m_currentScanMap.page[iMap];
-			ptr_t base = (ptr_t)memPage.mbi.BaseAddress;
+			uintptr_t base = (uintptr_t)memPage.mbi.BaseAddress;
 			size_t size = memPage.mbi.RegionSize;
-			ptr_t end = base + size;
+			uintptr_t end = base + size;
 
 			// For each page in the memory region
-			for (ptr_t p = base; p < end; p += m_scanSize) {
+			for (uintptr_t p = base; p < end; p += m_scanSize) {
 				size_t sz = m_scanSize;
 				if (p + sz >= end) {
 					sz = end - p;
@@ -145,7 +145,7 @@ void csScanner::PerformScan(bool firstScan)
 				DbgMemRead(p, m_currentBuffer, sz);
 
 				// Perform search on buffer
-				for (ptr_t s = 0; s < sz; s += m_scanStep) {
+				for (uintptr_t s = 0; s < sz; s += m_scanStep) {
 					// Stop if find size is beyond scan size
 					if (s + findSize > sz) {
 						break;
@@ -157,7 +157,7 @@ void csScanner::PerformScan(bool firstScan)
 					}
 
 					// Found it!
-					SearchResult &result = m_results.Add();
+					SearchResult &result = m_results.add();
 					result.m_base = p;
 					result.m_offset = s;
 					result.m_valueFound = 0;
@@ -176,12 +176,15 @@ void csScanner::PerformScan(bool firstScan)
 
 	// If this is not our first scan
 	if (!firstScan) {
-		for (int i = 0; i < m_results.Count(); i++) {
+		s2::list<SearchResult> newResults;
+		newResults.ensure_memory(m_results.len());
+
+		for (size_t i = 0; i < m_results.len(); i++) {
 			SearchResult &result = m_results[i];
 
 			//TODO: This is really slow!
 
-			ptr_t ptr = result.m_base + result.m_offset;
+			uintptr_t ptr = result.m_base + result.m_offset;
 
 			// The memory must still be readable
 			if (DbgMemIsValidReadPtr(ptr)) {
@@ -189,14 +192,12 @@ void csScanner::PerformScan(bool firstScan)
 
 				// Match data
 				if (MatchDataNext(m_currentCompare, find, result, (int)findSize)) {
-					continue;
+					newResults.add(result);
 				}
 			}
-
-			//TODO: A linked list might be faster here!
-			m_results.RemoveAt(i);
-			i--;
 		}
+
+		m_results = newResults;
 	}
 
 	if (m_pauseWhileScanning) {

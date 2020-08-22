@@ -74,7 +74,7 @@ public:
 	bool m_currentScanFloatRound2;
 	int m_currentScanFloatRoundNum;
 
-	s::Array<SearchResult, 100> m_results;
+	s2::list<SearchResult> m_results;
 
 	size_t m_scanSize;
 	unsigned char* m_currentBuffer;

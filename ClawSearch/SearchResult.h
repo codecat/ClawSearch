@@ -5,7 +5,7 @@
 class SearchResult
 {
 public:
-	ptr_t m_base;
-	ptr_t m_offset;
+	uintptr_t m_base;
+	uintptr_t m_offset;
 	uint64_t m_valueFound;
 };

@@ -1,2 +1,2 @@
-#define SCRATCH_IMPL
+#define S2_IMPL
 #include "Common.h"

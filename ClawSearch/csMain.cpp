@@ -91,24 +91,23 @@ void csMain::PerformScan(bool firstScan)
 	IupSetAttribute(m_hListResults, "REMOVEITEM", "ALL");
 	IupSetAttribute(m_hListResults, "AUTOREDRAW", "NO");
 
-	int numResults = m_scanner.m_results.Count();
-	for (int i = 0; i < numResults; i++) {
-		SearchResult &result = m_scanner.m_results[i];
+	size_t numResults = m_scanner.m_results.len();
 
-		ptr_t pointer = result.m_base + result.m_offset;
+	for (auto& result : m_scanner.m_results) {
+		uintptr_t pointer = result.m_base + result.m_offset;
 
-		s::String strLine = s::strPrintF("%p", pointer);
+		s2::string strLine = s2::strprintf("%p", pointer);
 
 		//TODO: Can we up the performance on this?
 		if (numResults < 20) {
 			char moduleName[MAX_MODULE_SIZE];
 			if (DbgGetModuleAt(pointer, moduleName)) {
-				strLine += s::strPrintF(" (%s)", moduleName);
+				strLine += s2::strprintf(" (%s)", moduleName);
 			}
 
 			char label[MAX_LABEL_SIZE];
 			if (DbgGetLabelAt(pointer, SEG_DEFAULT, label)) {
-				strLine += s::strPrintF(" %s", label);
+				strLine += s2::strprintf(" %s", label);
 			}
 		}
 

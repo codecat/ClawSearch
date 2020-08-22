@@ -340,23 +340,6 @@
     <ClInclude Include="pluginsdk\_scriptapi_register.h" />
     <ClInclude Include="pluginsdk\_scriptapi_stack.h" />
     <ClInclude Include="pluginsdk\_scriptapi_symbol.h" />
-    <ClInclude Include="Scratch\Array.hpp" />
-    <ClInclude Include="Scratch\Assert.hpp" />
-    <ClInclude Include="Scratch\Common.h" />
-    <ClInclude Include="Scratch\CVectors.h" />
-    <ClInclude Include="Scratch\Dictionary.hpp" />
-    <ClInclude Include="Scratch\Exception.hpp" />
-    <ClInclude Include="Scratch\Filename.hpp" />
-    <ClInclude Include="Scratch\FileStream.hpp" />
-    <ClInclude Include="Scratch\Function.hpp" />
-    <ClInclude Include="Scratch\MemoryStream.hpp" />
-    <ClInclude Include="Scratch\Mutex.hpp" />
-    <ClInclude Include="Scratch\NetworkStream.hpp" />
-    <ClInclude Include="Scratch\Scratch.hpp" />
-    <ClInclude Include="Scratch\StackArray.hpp" />
-    <ClInclude Include="Scratch\Stream.hpp" />
-    <ClInclude Include="Scratch\String.hpp" />
-    <ClInclude Include="Scratch\utf8.h" />
     <ClInclude Include="SearchResult.h" />
   </ItemGroup>
   <ItemGroup>

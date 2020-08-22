@@ -54,9 +54,6 @@
     <Filter Include="Header Files\cd">
       <UniqueIdentifier>{e37a3db0-b7e1-48cc-a71d-c7b1639633ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Scratch">
-      <UniqueIdentifier>{5f5877a3-4e13-4801-8a9c-0a978038cac5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pluginsdk\capstone\arm.h">
@@ -505,57 +502,6 @@
     </ClInclude>
     <ClInclude Include="..\cd\include\cddebug.h">
       <Filter>Header Files\cd</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\NetworkStream.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\Scratch.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\StackArray.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\Stream.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\String.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\utf8.h">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\Array.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\Assert.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\Common.h">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\CVectors.h">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\Dictionary.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\Exception.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\Filename.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\FileStream.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\Function.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\MemoryStream.hpp">
-      <Filter>Header Files\Scratch</Filter>
-    </ClInclude>
-    <ClInclude Include="Scratch\Mutex.hpp">
-      <Filter>Header Files\Scratch</Filter>
     </ClInclude>
     <ClInclude Include="SearchResult.h">
       <Filter>Header Files</Filter>

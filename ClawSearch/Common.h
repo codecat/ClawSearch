@@ -1,10 +1,4 @@
 #pragma once
 
-#define SCRATCH_NAMESPACE s
-#include "Scratch/Scratch.hpp"
-
-#ifdef _X86_
-typedef uint32_t ptr_t;
-#else
-typedef uint64_t ptr_t;
-#endif
+#include "scratch2/s2string.h"
+#include "scratch2/s2list.h"

@@ -71,23 +71,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.dp32</TargetExt>
-    <OutDir>D:\RootApps\x64_dbg\x32\plugins\</OutDir>
     <IncludePath>$(SolutionDir)iup\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.dp32</TargetExt>
-    <OutDir>D:\RootApps\x64_dbg\x32\plugins\</OutDir>
     <IncludePath>$(SolutionDir)iup\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)iup\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetExt>.dp64</TargetExt>
-    <OutDir>D:\RootApps\x64_dbg\x64\plugins\</OutDir>
     <IncludePath>$(SolutionDir)iup\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetExt>.dp64</TargetExt>
-    <OutDir>D:\RootApps\x64_dbg\x64\plugins\</OutDir>
     <IncludePath>$(SolutionDir)iup\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

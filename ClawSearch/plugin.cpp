@@ -2,26 +2,28 @@
 
 #include "csMain.h"
 
+static void executeOnGuiThreadAndWait(void(*worker)())
+{
+	struct Context
+	{
+		HANDLE event;
+		void(*worker)();
+	};
+	auto context = Context{ CreateEventW(nullptr, true, false, nullptr), worker };
+	GuiExecuteOnGuiThreadEx([](void* data)
+	{
+		auto context = (Context*)data;
+		context->worker();
+		SetEvent(context->event);
+	}, &context);
+	WaitForSingleObject(context.event, INFINITE);
+	CloseHandle(context.event);
+}
+
 enum
 {
 	MENU_OPENSEARCH
 };
-
-PLUG_EXPORT void CBINITDEBUG(CBTYPE cbType, PLUG_CB_INITDEBUG* info)
-{
-}
-
-PLUG_EXPORT void CBSTOPDEBUG(CBTYPE cbType, PLUG_CB_STOPDEBUG* info)
-{
-}
-
-PLUG_EXPORT void CBEXCEPTION(CBTYPE cbType, PLUG_CB_EXCEPTION* info)
-{
-}
-
-PLUG_EXPORT void CBDEBUGEVENT(CBTYPE cbType, PLUG_CB_DEBUGEVENT* info)
-{
-}
 
 PLUG_EXPORT void CBMENUENTRY(CBTYPE cbType, PLUG_CB_MENUENTRY* info)
 {
@@ -38,26 +40,7 @@ PLUG_EXPORT void CBMENUENTRY(CBTYPE cbType, PLUG_CB_MENUENTRY* info)
 //Initialize your plugin data here.
 bool pluginInit(PLUG_INITSTRUCT* initStruct)
 {
-	IupOpen(nullptr, nullptr);
-	IupControlsOpen();
-
-	IupSetGlobal("LOCKLOOP", "YES");
-
 	return true; //Return false to cancel loading the plugin.
-}
-
-//Deinitialize your plugin data here (clearing menus optional).
-bool pluginStop()
-{
-	CloseSearch();
-	IupClose();
-
-	_plugin_menuclear(hMenu);
-	_plugin_menuclear(hMenuDisasm);
-	_plugin_menuclear(hMenuDump);
-	_plugin_menuclear(hMenuStack);
-
-	return true;
 }
 
 //Do GUI/Menu related things here.
@@ -65,6 +48,32 @@ void pluginSetup()
 {
 	_plugin_menuaddentry(hMenu, MENU_OPENSEARCH, "Open search dialog");
 	_plugin_menuaddentry(hMenuDump, MENU_OPENSEARCH, "ClawSearch");
+
+	// Initialize the UI on the same thread as x64dbg's UI
+	executeOnGuiThreadAndWait([]
+	{
+		IupOpen(nullptr, nullptr);
+		IupControlsOpen();
+
+		IupSetGlobal("LOCKLOOP", "YES");
+	});
+}
+
+//Deinitialize your plugin data here (clearing menus optional).
+bool pluginStop()
+{
+	_plugin_menuclear(hMenu);
+	_plugin_menuclear(hMenuDisasm);
+	_plugin_menuclear(hMenuDump);
+	_plugin_menuclear(hMenuStack);
+
+	executeOnGuiThreadAndWait([]
+	{
+		CloseSearch();
+		IupClose();
+	});
+
+	return true;
 }
 
 // Hack for Iup
